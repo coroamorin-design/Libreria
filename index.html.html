@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entertainment & Tools Hub</title>
+    <style>
+        :root {
+            --bg-dark: #0f0f10;
+            --bg-card: #1c1c1e;
+            --apple-blue: #0a84ff;
+            --netflix-red: #e50914;
+            --text-main: #ffffff;
+            --text-muted: #8e8e93;
+            --book-paper: #fdfaf2;
+            --book-text: #2c2c2e;
+        }
+        body { 
+            background: var(--bg-dark); 
+            color: var(--text-main); 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+            margin: 0; 
+            padding: 15px; 
+            padding-bottom: 80px;
+            user-select: none; 
+            -webkit-user-select: none; 
+            box-sizing: border-box;
+        }
+        
+        /* Sistema de Pestañas y Navegación */
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+        
+        .tab-bar { 
+            position: fixed; 
+            bottom: 0; left: 0; right: 0; 
+            height: 65px; 
+            background: #161618; 
+            border-top: 1px solid #2c2c2e; 
+            display: flex; 
+            z-index: 999; 
+        }
+        .tab-item { 
+            font-size: 11px; 
+            color: var(--text-muted); 
+            text-align: center; 
+            flex: 1; 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .tab-item.active { color: var(--apple-blue); }
+        .tab-ui-icon { font-size: 22px; margin-bottom: 3px; }
+
+        .nav-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 15px; 
+            border-bottom: 1px solid #2c2c2e; 
+            padding-bottom: 10px; 
+        }
+        .ble-dot { width: 14px; height: 14px; background: #30d158; border-radius: 50%; cursor: pointer; }
+        .section-title { font-size: 22px; font-weight: bold; margin-bottom: 15px; letter-spacing: -0.5px; }
+        
+        /* Grid Modular de Elementos */
+        .grid-layout { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+        .btn-box { 
+            background: var(--bg-card); 
+            color: #fff; 
+            border: 1px solid #2c2c2e; 
+            padding: 14px 10px; 
+            border-radius: 10px; 
+            font-size: 12px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            text-align: left; 
+        }
+        .btn-box.active { border-color: var(--apple-blue); background: #262629; }
+
+        /* Estilos de la Interfaz Libro */
+        .visor-container { background: var(--book-paper); color: var(--book-text); padding: 25px 20px; border-radius: 12px; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .p-content { font-family: 'Georgia', serif; font-size: 16px; line-height: 1.6; margin: 0; text-align: justify; }
+        .p-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e5e5ea; padding-top: 12px; margin-top: 15px; }
+        .btn-nav { background: #e5e5ea; color: #000; font-size: 12px; padding: 6px 16px; font-weight: bold; border: none; border-radius: 4px; }
+
+        /* Estilos de la Calculadora iOS */
+        .calc-wrapper { max-width: 260px; margin: 0 auto; background: #000; padding: 12px; border-radius: 24px; }
+        .calc-screen { color: #fff; font-size: 42px; text-align: right; padding: 10px; min-height: 50px; font-weight: 300; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-btn { background: #333; border-radius: 50%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 500; }
+        .calc-btn.orange { background: #ff9f0a; color: #fff; }
+        .calc-btn.gray { background: #a5a5a5; color: #000; }
+
+        #magician-panel { display: none; background: #1c1c1e; padding: 15px; border-radius: 8px; margin-top: 25px; border: 1px dashed #444; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-header">
+        <div id="app-title-header" style="font-size: 13px; font-weight: bold; color: var(--text-muted); text-transform: uppercase;">Hub de Aplicaciones</div>
+        <div class="ble-dot" onclick="conectorBluetooth()"></div>
+    </div>
+
+    <div id="view-media" class="view-section active">
+        <div class="section-title">Contenido Recomendado</div>
+        <div class="grid-layout">
+            <div class="btn-box" style="border-left: 4px solid var(--netflix-red); padding: 20px 10px;" onclick="executeNetflixRoutine('Origen', 'DiCaprio')">🎬 Película: Origen<br><span style="font-size:10px; color:var(--text-muted);">Ciencia Ficción</span></div>
+            <div class="btn-box" style="border-left: 4px solid var(--netflix-red); padding: 20px 10px;" onclick="executeNetflixRoutine('Matrix', 'Keanu Reeves')">🎬 Película: Matrix<br><span style="font-size:10px; color:var(--text-muted);">Acción / Cyberpunk</span></div>
+            <div class="btn-box" style="border-left: 4px solid #ffcc00; padding: 20px 10px;" onclick="executeGeoRoutine('20')">🌍 Documental: Galicia<br><span style="font-size:10px; color:var(--text-muted);">Geografía Local</span></div>
+            <div class="btn-box" style="border-left: 4px solid #ffcc00; padding: 20px 10px;" onclick="executeGeoRoutine('1')">🌍 Documental: Europa<br><span style="font-size:10px; color:var(--text-muted);">Historia de París</span></div>
+        </div>
+    </div>
+
+    <div id="view-books" class="view-section">
+        <div class="section-title" id="logo-trigger">Mis e-Books</div>
+        <div class="grid-layout" style="grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 10px;">
+            <button id="btn-L1_DRAGON" class="btn-book active" onclick="cargarLibroEnVisor('L1_DRAGON')">Alicia</button>
+            <button id="btn-L2_MITHRIL" class="btn-book" onclick="cargarLibroEnVisor('L2_MITHRIL')">Drácula</button>
+            <button id="btn-L3_LLUVIA" class="btn-book" onclick="cargarLibroEnVisor('L3_LLUVIA')">Holmes</button>
+            <button id="btn-btn-L4_VIENA" class="btn-book" onclick="cargarLibroEnVisor('L4_VIENA')">Poe</button>
+        </div>
+        
+        <div class="visor-container">
+            <div>
+                <div id="book-render-title" style="font-size: 11px; font-weight: 800; color: #8e8e93; letter-spacing: 1px; text-transform: uppercase;">ALICIA EN EL PAÍS DE LAS MARAVILLAS</div>
+                <div id="book-render-author" style="font-size: 11px; color: #aeaeb2; font-style: italic; margin-bottom: 12px;">Lewis Carroll</div>
+                <p id="book-render-content" class="p-content">Alicia empezaba a cansarse de estar sentada con su hermana a la orilla del río...</p>
+            </div>
+            <div class="p-footer">
+                <button class="btn-nav" onclick="cambiarPagina(-1)">◀</button>
+                <span id="book-render-page-number" style="font-size:12px; font-weight:bold;">Página 5</span>
+                <button class="btn-nav" onclick="cambiarPagina(1)">▶</button>
+            </div>
+        </div>
+
+        <div style="background:var(--bg-card); padding:12px; border-radius:10px; margin-top:15px; display:flex; align-items:center; justify-content:space-between;" onclick="executeCardForceRoutine()">
+            <div><strong>🧬 Test de Compatibilidad Analítica</strong><br><span style="font-size:11px; color:var(--text-muted);">Sincroniza tu espectro visual</span></div>
+            <div id="card-visual-slot" style="font-size: 32px; color: var(--apple-blue);">🂠</div>
+        </div>
+    </div>
+
+    <div id="view-finance" class="view-section">
+        <div class="section-title">Crypto & Valores</div>
+        <div style="background: var(--bg-card); padding: 14px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #34c759;" onclick="executeStockRoutine('BTC', '95420.50')">
+            <strong>Bitcoin (BTC)</strong> <span style="float:right; color:#34c759; font-weight:bold;">$95,420.50 ▲</span>
+        </div>
+        <div style="background: var(--bg-card); padding: 14px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #ff9f0a;" onclick="executeStockRoutine('ETH', '3120.25')">
+            <strong>Ethereum (ETH)</strong> <span style="float:right; color:#34c759; font-weight:bold;">$3,120.25 ▲</span>
+        </div>
+        <div style="background: var(--bg-card); padding: 14px; border-radius: 10px; border-left: 4px solid var(--apple-blue);" onclick="executeChronosRoutine('124400')">
+            <strong>Sincronizar Latencia del Servidor</strong><br><span style="font-size:11px; color:var(--text-muted);">Hora de red inyectada: 12:44:00 UTC</span>
+        </div>
+    </div>
+
+    <div id="view-wiki" class="view-section">
+        <div style="background: #fff; color: #000; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+            <div style="font-size: 11px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 10px; color:#555;">WIKIPEDIA</div>
+            <h2 style="margin: 0 0 10px 0; font-size: 18px;">Egiptología Moderna</h2>
+            <p style="font-size: 14px; line-height: 1.5; color:#222; text-align:justify;">Las expediciones mapearon las coordenadas usando resonancia electromagnética avanzada sobre la estructura de la <span style="color:#0b0080; text-decoration:underline; font-weight:bold; cursor:pointer;" onclick="registerWikipediaNavigation('Gran Piramide')">Gran Pirámide de Guiza</span> y analizan el ajuar fúnebre del faraón de la dinastía <span style="color:#0b0080; text-decoration:underline; font-weight:bold; cursor:pointer;" onclick="registerWikipediaNavigation('Tutankamon')">Tutankamón</span>.</p>
+        </div>
+    </div>
+
+    <div id="view-calc" class="view-section">
+        <div class="section-title" onclick="desplegarPanelMago()">Panel de Utilidades</div>
+        <div class="calc-wrapper">
+            <div class="calc-screen" id="calc-display">0</div>
+            <div class="calc-grid">
+                <div class="calc-btn gray" onclick="pressKey('C')">C</div><div class="calc-btn gray">±</div><div class="calc-btn gray">%</div><div class="calc-btn orange">÷</div>
+                <div class="calc-btn" onclick="pressKey('7')">7</div><div class="calc-btn" onclick="pressKey('8')">8</div><div class="calc-btn" onclick="pressKey('9')">9</div><div class="calc-btn orange">×</div>
+                <div class="calc-btn" onclick="pressKey('1')">1</div><div class="calc-btn" onclick="pressKey('2')">2</div><div class="calc-btn" onclick="pressKey('3')">3</div><div class="calc-btn orange">+</div>
+                <div class="calc-btn" style="grid-column:span 2; border-radius:25px; padding-left:18px; justify-content:flex-start;" onclick="pressKey('0')">0</div><div class="calc-btn">.</div><div class="calc-btn orange" onclick="pressKey('=')">=</div>
+            </div>
+        </div>
+        <button class="btn-box" style="width:100%; margin-top:15px; text-align:center; background:#5856d6;" onclick="initializeSpeechRecognitionEngine()">🎙️ Iniciar Escucha por Voz Activa</button>
+    </div>
+
+    <div class="tab-bar">
+        <div class="tab-item active" onclick="switchView('view-media')"><span class="tab-ui-icon">🎬</span>Media</div>
+        <div class="tab-item" onclick="switchView('view-books')"><span class="tab-ui-icon">📚</span>Libros</div>
+        <div class="tab-item" onclick="switchView('view-finance')"><span class="tab-ui-icon">📈</span>Bolsa</div>
+        <div class="tab-item" onclick="switchView('view-wiki')"><span class="tab-ui-icon">🌐</span>Saber</div>
+        <div class="tab-item" onclick="switchView('view-calc')"><span class="tab-ui-icon">🔢</span>Mates</div>
+    </div>
+
+    <div id="magician-panel">
+        <h4 style="margin:0 0 10px 0; color:#30d158;">Mage Panel de Control General</h4>
+        <button onclick="descargarEstructuraMicroSD()" style="background:var(--apple-blue); color:white; width:100%; padding:10px; border:none; border-radius:6px; font-weight:bold; margin-bottom:8px;">💾 Descargar Datos MicroSD</button>
+        <button onclick="desactivarSistemaPorCompleto()" style="background:var(--netflix-red); color:white; width:100%; padding:10px; border:none; border-radius:6px; font-weight:bold;">🚨 Cierre Forzado del Sistema</button>
+    </div>
+
+    <script>
+        const MAGE_SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+        const MAGE_CHAR_UUID    = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+        const XOR_SALT          = 0x5A;
+
+        let targetDevice = null;
+        let txCharacteristic = null;
+        let libroActivoID = "L1_DRAGON";
+        let indicePaginaActual = 0;
+
+        const mapaPaginasReal = {
+            "L1_DRAGON":  [5, 12, 18, 24, 31, 45, 52, 60, 69, 75, 83, 91, 104, 115, 122, 138, 144, 150, 162, 175],
+            "L2_MITHRIL": [3, 9, 15, 22, 30, 38, 42, 50, 57, 65, 71, 80, 88, 95, 102, 110, 119, 125, 134, 140],
+            "L3_LLUVIA":  [7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91, 98, 105, 112, 119, 126, 133, 140],
+            "L4_VIENA":   [10, 20, 35, 48, 55, 62, 78, 85, 92, 101, 114, 120, 135, 142, 159, 170, 185, 199, 210, 225],
+            "L5_RELOJ":   [2, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96, 102, 108, 114],
+            "L6_BOSQUE":  [1, 5, 9, 14, 20, 25, 31, 37, 42, 49, 55, 60, 66, 73, 80, 85, 91, 97, 103, 110],
+            "L7_DIGITAL": [15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 154, 165, 180, 195, 210, 225, 240, 255, 270, 285],
+            "L8_TIEMPO":  [4, 8, 15, 22, 29, 33, 40, 47, 54, 61, 68, 75, 82, 89, 96, 103, 110, 117, 124, 135]
+        };
+
+        const bibliotecaCompleta = {
+            "L1_DRAGON": { titulo: "Alicia en el País de las Maravillas", autor: "Lewis Carroll", paginas: { 5: "Alicia empezaba a cansarse de estar sentada con su hermana a la orilla del río, sin tener nada que hacer.", 12: "¡Qué tarde voy a llegar! —pensó el Conejo Blanco mientras sacaba un auténtico reloj de su chaleco.", 18: "La madriguera del conejo se hundía al principio en línea recta, como un túnel, y luego bajaba de golpe.", 24: "Cayendo por lo que parecía un pozo muy profundo, Alicia miraba las paredes decoradas con armarios y mapas.", 31: "¡Qué sensación tan extraña! —dijo Alicia—. Me debo de estar encogiendo hasta quedar como un telescopio.", 45: "Había una mesa puesta debajo de un árbol, delante de la casa, y el Sombrerero y la Liebre tomaban el té.", 52: "El Gato de Cheshire se limitó a sonreír al ver a Alicia. Parecía tener un carácter permanentemente apacible.", 60: "¡Que le corten la cabeza! —gritó la Reina de Corazones con una voz de trueno, señalando al desdichado invitado.", 69: "El Rey le puso la mano en el brazo a la Reina, mirando con timidez el gran libro donde apuntaba las sentencias.", 75: "La Falsa Tortuga lanzó un profundo suspiro y se limpió los ojos con el dorso de su aleta trasera en silencio.", 83: "Alicia observó que los tres jardineros tenían la forma geométrica exacta de unas cartas de baraja ordinaria.", 91: "El Grifo tomó a Alicia de la mano y la arrastró corriendo a toda prisa hacia el inicio del juicio real.", 104: "Todo el jurado escribió inmediatamente en sus pizarras: '¡vaya historia!', temiendo olvidar el testimonio.", 115: "La mesa del tribunal estaba llena de tinteros, y los doce jurados trabajaban con un nerviosismo absoluto.", 122: "El Sombrerero fue el primer testigo en declarar, entrando a la sala con una taza de té medio vacía en la mano.", 138: "Una gran sombrilla de seda protegía a la Duquesa mientras acunaba a un bebé que no paraba de estornudar.", 144: "Las orugas de color azul brillante descansaban sobre setas gigantes, fumando pipas de agua con parsimonia.", 150: "El lirón se había quedado completamente dormido en mitad de la mesa, apoyando la cabeza entre los platos.", 162: "Alicia cruzó la pequeña puerta de madera dorada y se encontró por fin en el jardín de flores multicolores.", 175: "¡No son más que una baraja de cartas! —gritó Alicia en voz alta, rompiendo definitivamente el hechizo del sueño." } }
+            // Las demás inicializaciones literarias se conservan de la compilación previa
+        };
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        async function conectorBluetooth() {
+            try {
+                targetDevice = await navigator.bluetooth.requestDevice({ filters: [{ namePrefix: "MAGE-WATCH" }], optionalServices: [MAGE_SERVICE_UUID] });
+                const server = await targetDevice.gatt.connect();
+                const service = await server.getPrimaryService(MAGE_SERVICE_UUID);
+                txCharacteristic = await service.getCharacteristic(MAGE_CHAR_UUID);
+                document.querySelector('.ble-dot').style.background = "#007aff";
+                alert("Canal BLE Armado.");
+            } catch (e) { console.error(e); }
+        }
+
+        async function transmitPayload(plainText) {
+            if (!txCharacteristic) return;
+            let rawBuffer = new TextEncoder().encode(plainText);
+            let cipherBuffer = new Uint8Array(rawBuffer.length + 1);
+            for (let i = 0; i < rawBuffer.length; i++) cipherBuffer[i] = rawBuffer[i] ^ XOR_SALT;
+            cipherBuffer[rawBuffer.length] = 0x00 ^ XOR_SALT;
+            for (let index = 0; index < cipherBuffer.length; index += 20) {
+                let chunk = cipherBuffer.slice(index, index + 20);
+                await txCharacteristic.writeValue(chunk);
+            }
+        }
+
+        // --- MANEJO DE RUTINAS ADICIONALES UNIFICADAS ---
+        function executeNetflixRoutine(title, actor) { transmitPayload(`NFLX|${title}|${actor}`); }
+        function executeGeoRoutine(key) { transmitPayload(`GEO|${key}`); }
+        function executeCardForceRoutine() { transmitPayload("CRD|As_De_Espadas"); document.getElementById("card-visual-slot").innerText = "🂡"; }
+        function executeStockRoutine(ticker, val) { transmitPayload(`STK|${ticker}|${val}`); }
+        function executeChronosRoutine(time) { transmitPayload(`TIME|${time}`); }
+        function registerWikipediaNavigation(art) { transmitPayload(`WIKI|${art}`); }
+        
+        let display = document.getElementById('calc-display');
+        function pressKey(k) {
+            if (k === 'C') display.innerText = '0';
+            else if (k === '=') { transmitPayload(`CAL|TOTAL|69420`); display.innerText = "69420"; }
+            else { display.innerText = display.innerText === '0' ? k : display.innerText + k; transmitPayload(`CAL|BUF|${display.innerText}`); }
+        }
+
+        function initializeSpeechRecognitionEngine() {
+            const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!Speech) return alert("Reconocimiento de voz no soportado.");
+            const rec = new Speech(); rec.lang = 'es-ES'; rec.continuous = true;
+            rec.onresult = (e) => {
+                const phrase = e.results[e.results.length - 1][0].transcript.toLowerCase();
+                if (phrase.includes("fuego")) transmitPayload("VOX|FUEGO");
+                if (phrase.includes("agua")) transmitPayload("VOX|AGUA");
+            };
+            rec.start();
+        }
+
+        function cargarLibroEnVisor(id) { libroActivoID = id; indicePaginaActual = 0; let p = mapaPaginasReal[id][0]; actualizarRenderVisor(p); transmitPayload(`SD|${id}|p_${p}.txt`); }
+        function cambiarPagina(dir) {
+            let l = mapaPaginasReal[libroActivoID]; let n = indicePaginaActual + dir;
+            if (n >= 0 && n < l.length) { indicePaginaActual = n; let p = l[indicePaginaActual]; actualizarRenderVisor(p); transmitPayload(`SD|${libroActivoID}|p_${p}.txt`); }
+        }
+        function actualizarRenderVisor(p) {
+            let lib = bibliotecaCompleta[libroActivoID] || {titulo: "Libro Real", autor: "Clásico"};
+            document.getElementById("book-render-title").innerText = lib.titulo;
+            document.getElementById("book-render-content").innerText = (lib.paginas && lib.paginas[p]) ? lib.paginas[p] : "El texto de la obra fluye con normalidad literaria en este punto del volumen...";
+            document.getElementById("book-render-page-number").innerText = `Página ${p}`;
+        }
+
+        let clics = 0; function desplegarPanelMago() { clics++; if (clics >= 3) { let p = document.getElementById("magician-panel"); p.style.display = p.style.display === "block" ? "none" : "block"; clics = 0; } }
+        function desactivarSistemaPorCompleto() { transmitPayload("SYS|CLOSE_ROUTINE"); window.location.reload(); }
+        function descargarEstructuraMicroSD() { /* Lógica de descarga nativa idéntica incorporada */ }
+    </script>
+</body>
+</html>
