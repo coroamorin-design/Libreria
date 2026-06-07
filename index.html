@@ -2,72 +2,69 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sitio en Mantenimiento</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Entertainment & Tools Hub</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
-        :root { --bg-dark: #0f0f10; --bg-card: #1c1c1e; --apple-blue: #0a84ff; --netflix-red: #e50914; --text-main: #ffffff; --text-muted: #8e8e93; --book-paper: #fdfaf2; --book-text: #2c2c2e; }
-        body { background: #000; color: #333; font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; padding: 15px; padding-bottom: 80px; user-select: none; -webkit-user-select: none; box-sizing: border-box; overflow: hidden; }
-        
-        /* Pantalla de camuflaje de error */
+        :root { --bg-dark: #0f0f10; --bg-card: #1c1c1e; --apple-blue: #0a84ff; --netflix-red: #e50914; --text-main: #ffffff; --text-muted: #8e8e93; --book-paper: #fdfaf2; --book-text: #2c2c2e; --paper-faded: #aeaeb2; }
+        body { background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; padding: 15px; padding-bottom: 75px; user-select: none; -webkit-user-select: none; box-sizing: border-box; overflow-x: hidden; }
         #fake-error-screen { position: fixed; top:0; left:0; width:100vw; height:100vh; background:#000; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#555; font-family:monospace; padding:20px; box-sizing:border-box; text-align:center; }
-        
-        /* Contenedor real protegido */
         #secured-app-content { display: none; }
-        
         .view-section { display: none; }
         .view-section.active { display: block; }
-        .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: #161618; border-top: 1px solid #2c2c2e; display: flex; z-index: 999; }
-        .tab-item { font-size: 11px; color: var(--text-muted); text-align: center; flex: 1; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: #161618; border-top: 1px solid #2c2c2e; display: flex; align-items: center; justify-content: space-around; z-index: 999; padding-bottom: calc(env(safe-area-inset-bottom) / 1.5); }
+        .tab-item { font-size: 10px; color: var(--text-muted); text-align: center; flex: 1; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; border: none; background: none; padding: 0; }
         .tab-item.active { color: var(--apple-blue); }
-        .tab-ui-icon { font-size: 22px; margin-bottom: 3px; }
-        
+        .tab-ui-icon { font-size: 20px; margin-bottom: 3px; }
         .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #2c2c2e; padding-bottom: 10px; }
         .ble-dot { width: 14px; height: 14px; background: #30d158; border-radius: 50%; cursor: pointer; }
         .section-title { font-size: 20px; font-weight: bold; margin-bottom: 15px; letter-spacing: -0.5px; color:#fff; }
-        
         .grid-layout { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
         .btn-box { background: var(--bg-card); color: #fff; border: 1px solid #2c2c2e; padding: 14px 10px; border-radius: 10px; font-size: 12px; cursor: pointer; font-weight: bold; text-align: left; }
-        .btn-book { background: #2c2c2e; color: #fff; border: none; padding: 10px; border-radius: 5px; font-weight: bold; font-size: 11px; cursor: pointer; }
-        .btn-card { background: #2c2c2e; color: #fff; border: 1px solid #3a3a3c; padding: 10px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; }
-        
-        /* Visor de Libros Clásicos */
-        .visor-container { background: var(--book-paper); color: var(--book-text); padding: 25px 20px; border-radius: 12px; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .p-content { font-family: 'Georgia', serif; font-size: 16px; line-height: 1.6; margin: 0; text-align: justify; }
-        .p-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e5e5ea; padding-top: 12px; margin-top: 15px; }
+        .btn-book { background: #2c2c2e; color: #fff; border: none; padding: 10px; border-radius: 5px; font-weight: bold; font-size: 10px; cursor: pointer; flex: 1; margin: 2px; text-align: center; }
+        .btn-book.active { background: var(--apple-blue); }
+        .btn-card { background: #2c2c2e; color: #fff; border: 1px solid #3a3a3c; padding: 12px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; text-align: center; }
+        .visor-container { background: var(--book-paper); color: var(--book-text); padding: 20px; border-radius: 12px; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 10px; }
+        .book-header { border-bottom: 1px solid #e5e5ea; padding-bottom: 10px; margin-bottom: 10px; }
+        .book-title { font-size: 10px; font-weight: 800; color: var(--paper-faded); letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+        .book-author { font-size: 10px; color: var(--paper-faded); font-style: italic; margin: 2px 0 0 0; }
+        .p-content { font-family: 'Georgia', serif; font-size: 16px; line-height: 1.6; margin: 0; text-align: justify; color: #1c1c1e; flex-grow: 1; }
+        .p-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e5e5ea; padding-top: 10px; margin-top: 15px; }
         .btn-nav { background: #e5e5ea; color: #000; font-size: 12px; padding: 6px 16px; font-weight: bold; border: none; border-radius: 4px; }
         
-        /* Calculadora iOS */
-        .calc-wrapper { max-width: 260px; margin: 0 auto; background: #000; padding: 12px; border-radius: 24px; }
-        .calc-screen { color: #fff; font-size: 42px; text-align: right; padding: 10px; min-height: 50px; font-weight: 300; }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .calc-btn { background: #333; border-radius: 50%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 500; color:#fff; cursor: pointer; }
+        /* Buscador de Capitales */
+        .search-input { width: 100%; padding: 12px; background: var(--bg-card); border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; box-sizing: border-box; margin-bottom: 10px; }
+        .search-results { background: var(--bg-card); border: 1px solid #333; border-radius: 8px; max-height: 180px; overflow-y: auto; list-style: none; padding: 0; margin: 0; }
+        .search-item { padding: 12px; border-bottom: 1px solid #222; color: #fff; font-size: 13px; cursor: pointer; }
+        .search-item:active { background: #262629; }
+
+        /* Calculadora iOS Proporcionada */
+        .calc-wrapper { max-width: 280px; margin: 0 auto; background: #000; padding: 15px; border-radius: 25px; }
+        .calc-screen { color: #fff; font-size: 48px; text-align: right; padding: 10px; min-height: 60px; font-weight: 300; margin-bottom: 10px; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .calc-btn { background: #333; border-radius: 50%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 500; color:#fff; cursor: pointer; border: none; }
         .calc-btn.orange { background: #ff9f0a; color: #fff; }
         .calc-btn.gray { background: #a5a5a5; color: #000; }
 
-        /* Modal del Código QR */
-        #qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; flex-direction: column; }
+        #qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; flex-direction: column; padding: 20px; box-sizing: border-box; }
         #canvas-qr { background: #fff; padding: 15px; border-radius: 12px; }
-        
-        /* Zona de botones QR del administrador */
-        #admin-qr-deck { background: #161618; padding: 12px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #2c2c2e; max-height: 220px; overflow-y: auto; }
-        .btn-qr-generator { background: #2c2c2e; color: #fff; border: none; padding: 8px; margin: 4px 0; width: 100%; border-radius: 6px; font-size: 11px; font-weight: bold; text-align: left; cursor: pointer; display: block; }
+        #admin-qr-deck { background: #161618; padding: 12px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #2c2c2e; max-height: 150px; overflow-y: auto; }
+        .btn-qr-generator { background: #2c2c2e; color: #fff; border: none; padding: 10px; margin: 4px 0; width: 100%; border-radius: 6px; font-size: 11px; font-weight: bold; text-align: left; cursor: pointer; display: block; }
         #magician-panel { display: none; background: #1c1c1e; padding: 15px; border-radius: 8px; margin-top: 25px; border: 1px dashed #444; }
     </style>
 </head>
 <body>
 
-    <div id="fake-error-screen" onclick="capturarToquePantalla()">
+    <div id="fake-error-screen">
         <h2 style="font-size: 16px; margin-bottom: 10px;">HTTP ERROR 404</h2>
         <p style="font-size: 12px; margin: 0;">Fallo al conectar con el servidor remoto de base de datos.</p>
         <p style="font-size: 10px; margin-top: 30px; color: #222;">ID Transacción: 0x88F23A0B</p>
-        <button onclick="let check = prompt('Autenticación:'); if (check === '1926') { localStorage.setItem('mage_device_active', 'true'); activarEcosistemaReal(); }" style="background: #000; color: #000; border: none; margin-top: 80px; padding: 20px; width: 100%; cursor: pointer;">.</button>
+        <button onclick="let check = prompt('Autenticación:'); if (check === '1926') { localStorage.setItem('mage_device_active', 'true'); activarEcosistemaReal(); }" style="background: #000; color: #000; border: none; margin-top: 100px; padding: 25px; width: 100%; cursor: pointer;">.</button>
     </div>
 
     <div id="qr-modal" onclick="cerrarModalQR()">
-        <p id="qr-modal-text" style="color:#fff; font-size:12px; margin-bottom:15px; font-weight:bold; letter-spacing:0.5px; text-transform:uppercase; text-align:center;">ESCANEADO DE ACCESO REQUERIDO</p>
+        <p style="color:#fff; font-size:12px; margin-bottom:15px; font-weight:bold; text-align:center;">ESCANEADO DE ACCESO REQUERIDO</p>
         <canvas id="canvas-qr"></canvas>
-        <p style="color:var(--text-muted); font-size:11px; margin-top:15px; text-align:center;">Toca la pantalla para cerrar el visor</p>
     </div>
 
     <div id="secured-app-content">
@@ -76,282 +73,170 @@
             <div class="ble-dot" onclick="conectorBluetooth()"></div>
         </div>
 
-        <div id="view-admin-panel" class="view-section active">
+        <div id="view-media" class="view-section active">
             <div id="admin-qr-deck">
-                <div style="font-size:10px; color:var(--text-muted); font-weight:bold; margin-bottom:6px; text-transform:uppercase;">Inyectores de QR para las 10 Rutinas</div>
-                <button class="btn-qr-generator" style="border-left: 3px solid #0a84ff;" onclick="dispararGeneradorQR('view-books')">📚 R1: Lector de Libros Clásicos</button>
-                <button class="btn-qr-generator" style="border-left: 3px solid #e50914;" onclick="dispararGeneradorQR('view-netflix')">🎬 R2: Catálogo Netflix Core</button>
-                <button class="btn-qr-generator" style="border-left: 3px solid #ff9f0a;" onclick="dispararGeneradorQR('view-cards')">🃏 R3: Test de Cartas de Póker</button>
-                <button class="btn-qr-generator" style="border-left: 3px solid #ffcc00;" onclick="dispararGeneradorQR('view-geo')">🌍 R4: Geo-Echo Documentales</button>
-                <button class="btn-qr-generator" style="border-left: 3px solid #5856d6;" onclick="dispararGeneradorQR('view-chronos')">⏱️ R5: Chronos Sincronización Red</button>
-                <button class="btn-qr-generator" style="border-left: 3px solid #30d158;" onclick="dispararGeneradorQR('view-voice')">🎙️ R6: Voice Whisperer Escucha</button>
-                <button class="btn-qr-generator" style="border-left: 3px solid #00c7b1;" onclick="dispararGeneradorQR('view-crypto')">🪙 R7: Crypto Tracker Valores</button>
-                <button class="btn-qr-generator" style="border-left: 3px solid #bf5af2;" onclick="dispararGeneradorQR('view-stocks')">📈 R8: Bolsa de Valores Internacional</button>
-                <button class="btn-qr-generator" style="border-left: 3px solid #ff3b30;" onclick="dispararGeneradorQR('view-calc')">🔢 R9: Calculadora Forzaje Matemático</button>
-                <button class="btn-qr-generator" style="border-left: 3px solid #ff9500;" onclick="dispararGeneradorQR('view-wiki')">🌐 R10: Wikipedia Egiptología</button>
+                <button class="btn-qr-generator" style="border-left: 3px solid #0a84ff;" onclick="dispararGeneradorQR('view-books')">📚 R1-R3: Libros & Cartas</button>
+                <button class="btn-qr-generator" style="border-left: 3px solid #ffcc00;" onclick="dispararGeneradorQR('view-geo')">🌍 R4: Buscador de 30 Capitales Mundiales</button>
+                <button class="btn-qr-generator" style="border-left: 3px solid #e50914;" onclick="dispararGeneradorQR('view-netflix')">🎬 R2: Catálogo Netflix</button>
+                <button class="btn-qr-generator" style="border-left: 3px solid #34c759;" onclick="dispararGeneradorQR('view-calc')">🔢 R9: Mates & Wikipedia</button>
             </div>
-
-            <div class="section-title">Consola de Test Local</div>
-            <p style="font-size:12px; color:var(--text-muted); margin:0;">Usa el menú inferior o genera un QR para derivar la vista exclusiva al teléfono del espectador.</p>
+            <div class="section-title">Canal de Transmisión</div>
+            <div class="grid-layout">
+                <div class="btn-box" style="border-left: 4px solid var(--netflix-red);" onclick="executeNetflixRoutine('Stranger Things', 'Millie Bobby')">🎬 Stranger Things (T5)</div>
+                <div class="btn-box" style="border-left: 4px solid var(--netflix-red);" onclick="executeNetflixRoutine('Origen', 'DiCaprio')">🎬 Origen (Inception)</div>
+            </div>
         </div>
 
         <div id="view-books" class="view-section">
-            <div class="section-title">Mis e-Books Sincronizados</div>
-            <div class="grid-layout" style="grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 10px;">
+            <div class="section-title">Biblioteca Sincronizada (R1)</div>
+            <div style="display:flex; flex-wrap:wrap; margin-bottom:10px;">
                 <button id="btn-L1_DRAGON" class="btn-book" onclick="cargarLibroEnVisor('L1_DRAGON')">Alicia</button>
                 <button id="btn-L2_MITHRIL" class="btn-book" onclick="cargarLibroEnVisor('L2_MITHRIL')">Drácula</button>
                 <button id="btn-L3_LLUVIA" class="btn-book" onclick="cargarLibroEnVisor('L3_LLUVIA')">Holmes</button>
                 <button id="btn-L4_VIENA" class="btn-book" onclick="cargarLibroEnVisor('L4_VIENA')">Poe</button>
             </div>
-            <div class="grid-layout" style="grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 10px;">
-                <button id="btn-L5_RELOJ" class="btn-book" onclick="cargarLibroEnVisor('L5_RELOJ')">Quiroga</button>
-                <button id="btn-L6_BOSQUE" class="btn-book" onclick="cargarLibroEnVisor('L6_BOSQUE')">Esopo</button>
-                <button id="btn-L7_DIGITAL" class="btn-book" onclick="cargarLibroEnVisor('L7_DIGITAL')">SunTzu</button>
-                <button id="btn-L8_TIEMPO" class="btn-book" onclick="cargarLibroEnVisor('L8_TIEMPO')">Aris.</button>
-            </div>
             <div class="visor-container">
                 <div>
-                    <div id="book-render-title" style="font-size: 11px; font-weight: 800; color: #8e8e93; letter-spacing: 1px; text-transform: uppercase;">ALICIA EN EL PAÍS DE LAS MARAVILLAS</div>
-                    <div id="book-render-author" style="font-size: 11px; color: #aeaeb2; font-style: italic; margin-bottom: 12px;">Lewis Carroll</div>
-                    <p id="book-render-content" class="p-content">Selecciona un volumen para iniciar el visor síncrono por bloques de la MicroSD...</p>
+                    <div class="book-header">
+                        <h4 id="book-render-title" class="book-title">ALICIA EN EL PAÍS DE LAS MARAVILLAS</h4>
+                        <p id="book-render-author" class="book-author">Lewis Carroll</p>
+                    </div>
+                    <p id="book-render-content" class="p-content">Selecciona un volumen...</p>
                 </div>
-                <div class="p-footer">
-                    <button class="btn-nav" onclick="cambiarPagina(-1)">◀</button>
-                    <span id="book-render-page-number" style="font-size:12px; font-weight:bold;">Pág --</span>
-                    <button class="btn-nav" onclick="cambiarPagina(1)">▶</button>
-                </div>
+                <div class="p-footer"><button class="btn-nav" onclick="cambiarPagina(-1)">◀</button><span id="book-render-page-number" style="font-size:12px; font-weight:bold;">Pág --</span><button class="btn-nav" onclick="cambiarPagina(1)">▶</button></div>
             </div>
+            <div class="section-title" style="margin-top:20px;">Test de Cartas (R3)</div>
+            <div class="grid-layout" style="grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                <button class="btn-card" onclick="executeCardForceRoutine('As_Espadas', '🂡')">🂡</button>
+                <button class="btn-card" onclick="executeCardForceRoutine('Rey_Corazones', '🂱')">🂱</button>
+                <button class="btn-card" onclick="executeCardForceRoutine('Dama_Diamantes', '🃎')">🃎</button>
+                <button class="btn-card" onclick="executeCardForceRoutine('Diez_Treboles', '🃚')">🃚</button>
+            </div>
+            <div id="card-visual-slot" style="font-size:45px; text-align:center; margin-top:10px;">🂠</div>
+        </div>
+
+        <div id="view-geo" class="view-section">
+            <div class="section-title">Atlas Geográfico Mundial</div>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">Escribe para buscar cualquier capital global y analizar sus coordenadas de satélite:</p>
+            <input type="text" class="search-input" id="geo-search-box" placeholder="Buscar capital (ej: Madrid, París, Tokio...)" oninput="filtrarCapitalesMundiales()">
+            <ul class="search-results" id="geo-search-results"></ul>
         </div>
 
         <div id="view-netflix" class="view-section">
             <div class="section-title" style="color:var(--netflix-red);">NETFLIX ORIGINAL</div>
-            <div class="grid-layout" style="grid-template-columns: 1fr; gap: 10px;">
-                <div style="background:var(--bg-card); padding:16px; border-radius:10px; border:1px solid #333;" onclick="executeNetflixRoutine('Stranger Things', 'Millie Bobby')">
-                    <strong style="color:#fff; font-size:15px;">🍿 Stranger Things (T5)</strong>
-                    <p style="margin:5px 0 0 0; font-size:11px; color:var(--text-muted);">Reparto: Millie Bobby Brown, Winona Ryder. Ciencia ficción.</p>
-                </div>
-                <div style="background:var(--bg-card); padding:16px; border-radius:10px; border:1px solid #333;" onclick="executeNetflixRoutine('Origen', 'DiCaprio')">
-                    <strong style="color:#fff; font-size:15px;">🍿 Origen (Inception)</strong>
-                    <p style="margin:5px 0 0 0; font-size:11px; color:var(--text-muted);">Reparto: Leonardo DiCaprio. Dirección: Christopher Nolan.</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="view-cards" class="view-section">
-            <div class="section-title">Test de Selección Analítica de Naipes</div>
-            <div class="grid-layout" style="grid-template-columns: repeat(4, 1fr); gap: 6px;">
-                <div class="btn-card" onclick="executeCardForceRoutine('As_Espadas', '🂡')">🂡</div>
-                <div class="btn-card" onclick="executeCardForceRoutine('Rey_Corazones', '🂱')">🂱</div>
-                <div class="btn-card" onclick="executeCardForceRoutine('Dama_Diamantes', '🃎')">🃎</div>
-                <div class="btn-card" onclick="executeCardForceRoutine('Diez_Treboles', '🃚')">🃚</div>
-            </div>
-            <div style="background:var(--bg-card); padding:20px; border-radius:12px; text-align:center; margin-top:20px;">
-                <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">NAIPE SINCRONIZADO CON LA RED</div>
-                <div id="card-visual-slot" style="font-size: 64px; color: var(--apple-blue);">🂠</div>
-            </div>
-        </div>
-
-        <div id="view-geo" class="view-section">
-            <div class="section-title">Geo-Echo: Ciudades & Coordenadas</div>
-            <div class="grid-layout" style="grid-template-columns: 1fr; gap: 10px;">
-                <div style="background:var(--bg-card); padding:15px; border-radius:10px;" onclick="executeGeoRoutine('VIGO_42_24')">
-                    <strong style="color:#fff;">📍 Galicia, España (Coffer Target)</strong>
-                    <p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted);">Coordenadas inyectadas: 42°14'N, 8°43'O (Vigo/Santiago).</p>
-                </div>
-                <div style="background:var(--bg-card); padding:15px; border-radius:10px;" onclick="executeGeoRoutine('PARIS_48_85')">
-                    <strong style="color:#fff;">📍 París, Francia (FISM Standard)</strong>
-                    <p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted);">Coordenadas inyectadas: 48°51'N, 2°21'E (Eiffel/GrandPrix).</p>
-                </div>
-                <div style="background:var(--bg-card); padding:15px; border-radius:10px;" onclick="executeGeoRoutine('ROMA_41_90')">
-                    <strong style="color:#fff;">📍 Roma, Italia</strong>
-                    <p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted);">Coordenadas inyectadas: 41°54'N, 12°29'E (Coliseo/Nervio).</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="view-chronos" class="view-section">
-            <div class="section-title">Chronos Server Link</div>
-            <div style="background: var(--bg-card); padding: 20px; border-radius: 12px; text-align: center; border: 1px solid var(--apple-blue);" onclick="executeChronosRoutine('124400')">
-                <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">LATENCIA ESTIMADA DE RED</div>
-                <div style="font-size:32px; font-weight:bold; color:var(--apple-blue);">12:44:00 UTC</div>
-                <p style="margin:10px 0 0 0; font-size:11px; color:var(--text-muted);">Pulsa este módulo para inyectar la marca de tiempo en el procesador.</p>
-            </div>
-        </div>
-
-        <div id="view-voice" class="view-section">
-            <div class="section-title">Voice Whisperer Engine</div>
-            <div style="background: var(--bg-card); padding: 20px; border-radius: 12px; text-align: center;">
-                <button style="background:#5856d6; color:#fff; border:none; padding:15px 20px; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="initializeSpeechRecognitionEngine()">🎙️ ACTIVAR CAPTURA POR VOZ</button>
-                <p id="voice-status-log" style="margin:15px 0 0 0; font-size:12px; color:var(--text-muted);">Estado: Micrófono en suspensión.</p>
-            </div>
-        </div>
-
-        <div id="view-crypto" class="view-section">
-            <div class="section-title">Crypto Tickers Live</div>
-            <div style="background: var(--bg-card); padding: 16px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #34c759;" onclick="executeStockRoutine('BTC', '95420.50')">
-                <strong style="color:#fff;">Bitcoin (BTC)</strong> <span style="float:right; color:#34c759; font-weight:bold;">$95,420.50 ▲</span>
-            </div>
-            <div style="background: var(--bg-card); padding: 16px; border-radius: 10px; border-left: 4px solid #ff9f0a;" onclick="executeStockRoutine('ETH', '3120.25')">
-                <strong style="color:#fff;">Ethereum (ETH)</strong> <span style="float:right; color:#34c759; font-weight:bold;">$3,120.25 ▲</span>
-            </div>
-        </div>
-
-        <div id="view-stocks" class="view-section">
-            <div class="section-title">Índices de Bolsa</div>
-            <div style="background: var(--bg-card); padding: 16px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #0a84ff;" onclick="executeStockRoutine('AAPL', '182.40')">
-                <strong style="color:#fff;">Apple Inc (NASDAQ: AAPL)</strong> <span style="float:right; color:#34c759; font-weight:bold;">$182.40 ▲</span>
-            </div>
-            <div style="background: var(--bg-card); padding: 16px; border-radius: 10px; border-left: 4px solid #ff3b30;" onclick="executeStockRoutine('TSLA', '240.15')">
-                <strong style="color:#fff;">Tesla Motors (NASDAQ: TSLA)</strong> <span style="float:right; color:#34c759; font-weight:bold;">$240.15 ▲</span>
+            <div style="background:var(--bg-card); padding:15px; border-radius:10px;" onclick="executeNetflixRoutine('Stranger Things', 'Millie Bobby')">
+                <strong style="color:#fff;">Stranger Things (T5)</strong>
             </div>
         </div>
 
         <div id="view-calc" class="view-section">
-            <div class="section-title">Calculadora Comercial</div>
+            <div class="section-title">Calculadora (R9)</div>
             <div class="calc-wrapper">
                 <div class="calc-screen" id="calc-display">0</div>
                 <div class="calc-grid">
-                    <div class="calc-btn gray" onclick="pressKey('C')">C</div><div class="calc-btn gray">±</div><div class="calc-btn gray">%</div><div class="calc-btn orange">÷</div>
-                    <div class="calc-btn" onclick="pressKey('7')">7</div><div class="calc-btn" onclick="pressKey('8')">8</div><div class="calc-btn" onclick="pressKey('9')">9</div><div class="calc-btn orange">×</div>
-                    <div class="calc-btn" onclick="pressKey('1')">1</div><div class="calc-btn" onclick="pressKey('2')">2</div><div class="calc-btn" onclick="pressKey('3')">3</div><div class="calc-btn orange">+</div>
-                    <div class="calc-btn" style="grid-column:span 2; border-radius:25px; padding-left:18px; justify-content:flex-start;" onclick="pressKey('0')">0</div><div class="calc-btn">.</div><div class="calc-btn orange" onclick="pressKey('=')">=</div>
+                    <button class="calc-btn gray" onclick="pressKey('C')">C</button><button class="calc-btn gray">±</button><button class="calc-btn gray">%</button><button class="calc-btn orange">÷</button>
+                    <button class="calc-btn" onclick="pressKey('7')">7</button><button class="calc-btn" onclick="pressKey('8')">8</button><button class="calc-btn" onclick="pressKey('9')">9</button><button class="calc-btn orange">×</button>
+                    <button class="calc-btn" onclick="pressKey('1')">1</button><button class="calc-btn" onclick="pressKey('2')">2</button><button class="calc-btn" onclick="pressKey('3')">3</button><button class="calc-btn orange">+</button>
+                    <button class="calc-btn" style="grid-column:span 2; border-radius:30px; padding-left:25px; justify-content:flex-start;" onclick="pressKey('0')">0</button><button class="calc-btn">.</button><button class="calc-btn orange" onclick="pressKey('=')">=</button>
                 </div>
             </div>
-        </div>
-
-        <div id="view-wiki" class="view-section">
-            <div style="background: #fff; color: #000; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                <div style="font-size: 10px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 10px; color:#555; letter-spacing:1px;">WIKIPEDIA</div>
-                <h3 style="margin: 0 0 10px 0; font-size: 18px; color:#000;">Egiptología e Historiografía</h3>
-                <p style="font-size: 13px; line-height: 1.5; color:#222; text-align:justify; margin:0;">Las cámaras funerarias reales albergan secretos geométricos avanzados. Investigaciones recientes analizan la arquitectura interna de la <span style="color:#0b0080; text-decoration:underline; font-weight:bold; cursor:pointer;" onclick="registerWikipediaNavigation('Gran_Piramide')">Gran Pirámide de Guiza</span> y los mapas de la dinastía de <span style="color:#0b0080; text-decoration:underline; font-weight:bold; cursor:pointer;" onclick="registerWikipediaNavigation('Tutankamon')">Tutankamón</span>.</p>
+            <div style="background: #fff; color: #000; padding: 15px; border-radius: 12px; margin-top:20px;">
+                <div style="font-size: 10px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 3px; color:#555;">WIKIPEDIA (R10)</div>
+                <p style="font-size: 13px; margin: 5px 0 0 0;">Análisis de la <span style="color:#0b0080; text-decoration:underline; font-weight:bold;" onclick="registerWikipediaNavigation('Gran_Piramide')">Gran Pirámide de Guiza</span>.</p>
             </div>
         </div>
 
-        <div class="tab-bar" id="master-tab-navigator">
-            <div class="tab-item active" onclick="switchView('view-admin-panel')"><span class="tab-ui-icon">🎛️</span>Panel</div>
-            <div class="tab-item" onclick="switchView('view-books')"><span class="tab-ui-icon">📚</span>Libros</div>
-            <div class="tab-item" onclick="switchView('view-netflix')"><span class="tab-ui-icon">🎬</span>Netfl.</div>
-            <div class="tab-item" onclick="switchView('view-geo')"><span class="tab-ui-icon">🌍</span>Ruta</div>
-            <div class="tab-item" onclick="switchView('view-calc')"><span class="tab-ui-icon">🔢</span>Mates</div>
-        </div>
-
-        <div id="magician-panel">
-            <button onclick="localStorage.clear(); window.location.reload();" style="background:var(--netflix-red); color:white; width:100%; padding:10px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">🚨 Formatear Acceso Local</button>
-        </div>
+        <nav class="tab-bar" id="master-tab-navigator">
+            <button class="tab-item active" onclick="switchView('view-media')"><span class="tab-ui-icon">🎛️</span>Medios</button>
+            <button class="tab-item" onclick="switchView('view-books')"><span class="tab-ui-icon">📚</span>Libros</button>
+            <button class="tab-item" onclick="switchView('view-geo')"><span class="tab-ui-icon">🌍</span>Capitales</button>
+            <button class="tab-item" onclick="switchView('view-netflix')"><span class="tab-ui-icon">🎬</span>Netflix</button>
+            <button class="tab-item" onclick="switchView('view-calc')"><span class="tab-ui-icon">🔢</span>Mates</button>
+        </nav>
     </div>
 
     <script>
-        const SEED_PIN = "1926"; 
-        const XOR_SALT = 0x5A;
+        const SEED_PIN = "1926"; const XOR_SALT = 0x5A;
         const MAGE_SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
         const MAGE_CHAR_UUID    = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+        let sistemaDesbloqueado = false, targetDevice = null, txCharacteristic = null, libroActivoID = "L1_DRAGON", indicePaginaActual = 0;
 
-        let sistemaDesbloqueado = false;
-        let targetDevice = null, txCharacteristic = null, libroActivoID = "L1_DRAGON", indicePaginaActual = 0;
+        // BASE DE DATOS REAL: LAS 30 CAPITALES DEL MUNDO CON SUS COORDENADAS COFFER FISM
+        const BASE_30_CAPITALES = [
+            { nombre: "Madrid (España)", geo: "MAD_40_41" }, { nombre: "París (Francia)", geo: "PAR_48_85" },
+            { nombre: "Roma (Italia)", geo: "ROM_41_90" }, { nombre: "Londres (Reino Unido)", geo: "LON_51_50" },
+            { nombre: "Berlín (Alemania)", geo: "BER_52_52" }, { nombre: "Lisboa (Portugal)", geo: "LIS_38_72" },
+            { nombre: "Atenas (Grecia)", geo: "ATE_37_98" }, { nombre: "Dublín (Irlanda)", geo: "DUB_53_34" },
+            { nombre: "Washington (EEUU)", geo: "WAS_38_90" }, { nombre: "Tokio (Japón)", geo: "TOK_35_68" },
+            { nombre: "Pekín (China)", geo: "PEK_39_90" }, { nombre: "Moscú (Rusia)", geo: "MOS_55_75" },
+            { nombre: "El Cairo (Egipto)", geo: "CAI_30_04" }, { nombre: "Buenos Aires (Argentina)", geo: "BUE_34_60" },
+            { nombre: "Ciudad de México (México)", geo: "MEX_19_43" }, { nombre: "Brasilia (Brasil)", geo: "BRA_15_79" },
+            { nombre: "Ottawa (Canadá)", geo: "OTT_45_42" }, { nombre: "Camberra (Australia)", geo: "CAM_35_28" },
+            { nombre: "Viena (Austria)", geo: "VIE_48_20" }, { nombre: "Bruselas (Bélgica)", geo: "BRU_50_85" },
+            { nombre: "Ámsterdam (Países Bajos)", geo: "AMS_52_37" }, { nombre: "Copenhague (Dinamarca)", geo: "COP_55_67" },
+            { nombre: "Estocolmo (Suecia)", geo: "EST_59_32" }, { nombre: "Oslo (Noruega)", geo: "OSL_59_91" },
+            { nombre: "Helsinki (Finlandia)", geo: "HEL_60_16" }, { nombre: "Varsovia (Polonia)", geo: "VAR_52_23" },
+            { nombre: "Praga (República Checa)", geo: "PRA_50_07" }, { nombre: "Budapest (Hungría)", geo: "BUD_47_49" },
+            { nombre: "Nueva Delhi (India)", geo: "DEL_28_61" }, { nombre: "Seúl (Corea del Sur)", geo: "SEU_37_56" }
+        ];
 
-        // Base de Datos Completa de Páginas Intercaladas para las 8 carpetas de la SD (R1)
-        const mapaPaginasReal = {
-            "L1_DRAGON":  [5, 12, 18, 24, 31, 45, 52, 60, 69, 75, 83, 91, 104, 115, 122, 138, 144, 150, 162, 175],
-            "L2_MITHRIL": [3, 9, 15, 22, 30, 38, 42, 50, 57, 65, 71, 80, 88, 95, 102, 110, 119, 125, 134, 140],
-            "L3_LLUVIA":  [7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91, 98, 105, 112, 119, 126, 133, 140],
-            "L4_VIENA":   [10, 20, 35, 48, 55, 62, 78, 85, 92, 101, 114, 120, 135, 142, 159, 170, 185, 199, 210, 225],
-            "L5_RELOJ":   [2, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96, 102, 108, 114],
-            "L6_BOSQUE":  [1, 5, 9, 14, 20, 25, 31, 37, 42, 49, 55, 60, 66, 73, 80, 85, 91, 97, 103, 110],
-            "L7_DIGITAL": [15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 154, 165, 180, 195, 210, 225, 240, 255, 270, 285],
-            "L8_TIEMPO":  [4, 8, 15, 22, 29, 33, 40, 47, 54, 61, 68, 75, 82, 89, 96, 103, 110, 117, 124, 135]
-        };
+        const mapaPaginasReal = { "L1_DRAGON": [5, 12, 18, 24, 31, 45, 52, 60, 69, 75, 83, 91, 104, 115, 122, 138, 144, 150, 162, 175] };
+        const bibliotecaCompleta = { "L1_DRAGON": { titulo: "Alicia en el País de las Maravillas", autor: "Lewis Carroll", paginas: { 5: "Alicia empezaba a cansarse de estar sentada con su hermana a la orilla del río...", 12: "¡Qué tarde voy a llegar! —pensó el Conejo Blanco..." } } };
 
-        const bibliotecaCompleta = {
-            "L1_DRAGON": { titulo: "Alicia en el País de las Maravillas", autor: "Lewis Carroll", paginas: { 5: "Alicia empezaba a cansarse de estar sentada con su hermana a la orilla del río, sin tener nada que hacer.", 12: "¡Qué tarde voy a llegar! —pensó el Conejo Blanco mientras sacaba un auténtico reloj de su chaleco.", 18: "La madriguera del conejo se hundía al principio en línea recta, como un túnel, y luego bajaba de golpe.", 24: "Cayendo por lo que parecía un pozo muy profundo, Alicia miraba las paredes decoradas con armarios y mapas.", 31: "¡Qué sensación tan extraña! —dijo Alicia—. Me debo de estar encogiendo hasta quedar como un telescopio.", 45: "Había una mesa puesta debajo de un árbol, delante de la casa, y el Sombrerero y la Liebre tomaban el té.", 52: "El Gato de Cheshire se limitó a sonreír al ver a Alicia. Parecía tener un carácter permanentemente apacible.", 60: "¡Que le corten la cabeza! —gritó la Reina de Corazones con una voz de trueno, señalando al desdichado invitado.", 69: "El Rey le puso la mano en el brazo a la Reina, mirando con timidez el gran libro donde apuntaba las sentencias.", 75: "La Falsa Tortuga lanzó un profundo suspiro y se limpió los ojos con el dorso de su aleta trasera en silencio.", 83: "Alicia observó que los tres jardineros tenían la forma geométrica exacta de unas cartas de baraja ordinaria.", 91: "El Grifo tomó a Alicia de la mano y la arrastró corriendo a toda prisa hacia el inicio del juicio real.", 104: "Todo el jurado escribió inmediatamente en sus pizarras: '¡vaya historia!', temiendo olvidar el testimonio.", 115: "La mesa del tribunal estaba llena de tinteros, y los doce jurados trabajaban con un nerviosismo absoluto.", 122: "El Sombrerero fue el primer testigo en declarar, entrando a la sala con una taza de té medio vacía en la mano.", 138: "Una gran sombrilla de seda protegía a la Duquesa mientras acunaba a un bebé que no paraba de estornudar.", 144: "Las orugas de color azul brillante descansaban sobre setas gigantes, fumando pipas de agua con parsimonia.", 150: "El lirón se había quedado completamente dormido en mitad de la mesa, apoyando la cabeza entre los platos.", 162: "Alicia cruzó la pequeña puerta de madera dorada y se encontró por fin en el jardín de flores multicolores.", 175: "¡No son más que una baraja de cartas! —gritó Alicia en voz alta, rompiendo definitivamente el hechizo del sueño." } },
-            "L2_MITHRIL": { titulo: "Drácula", autor: "Bram Stoker", paginas: { 3: "Bistritz, 3 de mayo. Dejé Munich a las 8:30 p.m. y llegué a Viena a la mañana siguiente temprano.", 9: "El pasaje de montaña estaba oscuro y las siluetas de los lobos recortaban el horizonte nocturno.", 15: "El conde me tendió la mano con un saludo formal. Sus dedos eran fríos como el hielo de una tumba.", 22: "Las ventanas del castillo daban a un abismo vertiginoso donde la niebla flotaba permutablemente.", 30: "Jonathan Harker escribió en su diario privado sobre los extraños hábitos del morador de los Cárpatos.", 38: "Un carruaje negro tirado por cuatro caballos de carbón avanzaba veloz sin luces por el sendero.", 42: "El crucifijo de plata brilló sobre mi pecho justo en el instante en que el conde se acercaba.", 50: "Las tres mujeres se desvanecieron en el aire de la biblioteca como partículas de polvo al sol.", 57: "Un barco encalló en la costa de Whitby sin tripulación viva a bordo, solo un enorme perro negro.", 65: "Lucy presentaba dos pequeñas marcas circulares en el cuello que el doctor no lograba explicar.", 71: "Van Helsing abrió su maletín de cuero sagrado y extraxo varias flores de ajo macho silvestre.", 80: "La caja de tierra del cementerio de Carfax desprendía un hedor rancio que inundaba toda la sala.", 88: "Mina Murray transcribió las grabaciones del fonógrafo buscando un patrón en los diarios de viaje.", 95: "Una estaca de madera tallada a mano era el único instrumento capaz de detener el horror nocturno.", 102: "El profesor dibujó un círculo protector con obleas consagradas alrededor del campamento base.", 110: "Las hojas secas crujieron en la cripta abandonada, alertando a los cazadores del peligro inminente.", 119: "El sol comenzaba a ocultarse tras las montañas, otorgando de nuevo el poder a las sombras.", 125: "Renfield devoraba moscas en su celda del sanatorio, repitiendo que la sangre es la vida eterna.", 134: "Los gitanos transportaban la pesada caja de madera a toda velocidad a lo largo del paso del río.", 140: "Un grito de alivio rompió el silencio de los Cárpatos al ver la caja convertirse en polvo fino." } },
-            "L3_LLUVIA": { titulo: "Las Aventuras de Sherlock Holmes", autor: "Arthur Conan Doyle", paginas: { 7: "Para Sherlock Holmes, ella es siempre 'la mujer'. Rara vez le oí mencionarla bajo otro nombre.", 14: "Aquel matrimonio había alterado por completo mis relaciones con Holmes. Mi propia felicidad me absorbía.", 21: "El doctor Watson observaba el parqué del despacho de Baker Street mientras Holmes fumaba en silencio.", 28: "Un cliente misterioso, vestido con una lujosa máscara de seda, llamó a la puerta a medianoche.", 35: "La fotografía robada de Irene Adler era el único objeto que el rey de Bohemia deseaba recuperar.", 42: "Una noche, el veinte de marzo de 1888, regresaba yo de una visita a un paciente cuando pasé por Baker Street.", 49: "Las pistas del suelo de arcilla indicaban que el sospechoso caminaba cojeando del pie derecho.", 56: "Una carta con cinco pepitas de naranja en su interior llegó al despacho desatando el pánico.", 63: "El club de los pelirrojos ofrecía un empleo extraordinario por copiar la Enciclopedia Británica.", 70: "Un mendigo con una cicatriz en el labio vigilaba la esquina de la calle comercial de Londres.", 77: "La liga de los pelirrojos se disolvió de forma tan repentina como se había creado originalmente.", 84: "El atraco al banco se frustró gracias a que Holmes esperó oculto en la bóveda subterránea.", 91: "Las cenizas de tabaco de pipa permitieron al detective identificar la marca exacta del asesino.", 98: "Las luces del laboratorio químico seguían encendidas. Holmes trabajaba concentrado en su pipeta.", 105: "Un sombrero de fieltro viejo guardaba la clave para localizar la valiosa joya azul del ganso.", 112: "El cliente relató su trágica historia familiar mientras consumía un té caliente en el diván.", 119: "Un silbato de tren anunció nuestra llegada al condado de Boscombe para iniciar la investigación.", 126: "El arma del crimen apareció sumergida en el fondo del estanque de los patos de la finca real.", 133: "El misterio de la banda moteada se resolvió al descubrir el conducto de ventilación de la alcoba.", 140: "Una serpiente de las pantanos descendió por la cuerda de la campana, attacking a su propio criador." } },
-            "L4_VIENA": { titulo: "El Escarabajo de Oro", autor: "Edgar Allan Poe", paginas: { 10: "Muchos años hace que entablé amistad con un caballero llamado William Legrand. Era de una antigua familia.", 20: "El hallazgo del extraño insecto dorado de caparazón pesado despertó una obsesión incalculable en Legrand.", 35: "El viejo sirviente Júpiter temía seriamente por la salud mental de su joven amo tras la picadura.", 48: "Un pergamino sucio, hallado enterrado en la arena de la playa, contenía marcas ocultas con tinta invisible.", 55: "Al acercar el papel al calor de las brasas de la chimenea, comenzaron a aparecer unas figuras rojas.", 62: "Un jeroglífico con forma de cabra delataba la firma del místico capitán pirata llamado Kidd.", 78: "La expedición se internó en las colinas de la isla de Sullivan cargando con palas y una linterna de aceite.", 85: "El sirviente subió a la rama del séptimo árbol llevando el escarabajo colgado de una cuerda de piano.", 92: "Dejar caer el insecto a través del ojo izquierdo de la calavera clavada en el tronco era la clave.", 101: "El primer intento de excavación resultó un fracaso absoluto debido a un error de cálculo en las yardas.", 114: "La segunda fosa desenterró dos esqueletos humanos junto a tres pesadas cajas de madera reforzada.", 120: "El cofre contenía una fortuna masiva en doblones de oro, joyas imperiales y diamantes en bruto.", 135: "El criptograma numérico se descifró analizando la frecuencia de los caracteres más comunes del idioma.", 142: "Un telescopio marino permitió alinear el ángulo exacto de la roca del diablo con el árbol maestro.", 159: "Legrand relató cómo dedujo la posición del tesoro partiendo de los restos del naufragio de la cala.", 170: "Los piratas ejecutaron a los trabajadores de la fosa para enterrar el secreto junto con las monedas.", 185: "Una antigua moneda española con el cuño desgastado sirvió para datar el año exacto del intierro.", 199: "El tintineo de las piezas de oro al ser contadas en la mesa de la cabaña duró hasta el amanecer.", 210: "Los documentos históricos del cofre revelaron los nombres de las naves asaltadas en el Caribe.", 225: "El misterio llegó a su fin, demostrando que la locura aparente de Legrand era pura genialidad matemática." } }
-        };
-
-        // --- ENRUTADOR INTELIGENTE POR PARÁMETROS ---
         window.addEventListener('DOMContentLoaded', () => {
             const parametrosURL = new URLSearchParams(window.location.search);
             const rutinaInyectada = parametrosURL.get('routine');
-            const accesoFijoGuardado = localStorage.getItem('mage_device_active');
-
             if (rutinaInyectada) {
-                sistemaDesbloqueado = true;
-                document.getElementById("fake-error-screen").style.display = "none";
-                document.getElementById("secured-app-content").style.display = "block";
-                document.body.style.background = "var(--bg-dark)";
-                document.body.style.overflow = "auto";
-                
-                switchView(rutinaInyectada);
-                document.getElementById("admin-qr-deck").style.display = "none";
-                document.getElementById("master-tab-navigator").style.display = "none"; 
-            } else if (accesoFijoGuardado === "true") {
-                activarEcosistemaReal();
-            }
+                sistemaDesbloqueado = true; document.getElementById("fake-error-screen").style.display = "none";
+                document.getElementById("secured-app-content").style.display = "block"; document.body.style.background = "var(--bg-dark)";
+                switchView(rutinaInyectada); document.getElementById("admin-qr-deck").style.display = "none"; document.getElementById("master-tab-navigator").style.display = "none"; 
+            } else if (localStorage.getItem('mage_device_active') === "true") { activarEcosistemaReal(); }
+            filtrarCapitalesMundiales(); // Carga inicial de la lista
         });
 
-        function capturarToquePantalla() {
-            // El botón invisible de abajo se encarga del Prompt, este método queda como respaldo por toques
-        }
+        function activarEcosistemaReal() { sistemaDesbloqueado = true; document.getElementById("fake-error-screen").style.display = "none"; document.getElementById("secured-app-content").style.display = "block"; document.body.style.background = "var(--bg-dark)"; }
+        function dispararGeneradorQR(targetRoutineView) { let urlEnrutada = `${window.location.href.split('?')[0]}?routine=${targetRoutineView}`; QRCode.toCanvas(document.getElementById('canvas-qr'), urlEnrutada, { width: 260, margin: 1 }, function (error) { if (!error) document.getElementById('qr-modal').style.display = 'flex'; }); }
+        function cerrarModalQR() { document.getElementById('qr-modal').style.display = 'none'; }
 
-        function activarEcosistemaReal() {
-            sistemaDesbloqueado = true;
-            document.getElementById("fake-error-screen").style.display = "none";
-            document.getElementById("secured-app-content").style.display = "block";
-            document.body.style.background = "var(--bg-dark)";
-            document.body.style.overflow = "auto";
-        }
-
-        // --- GENERADOR DE QR CON ENRUTADOR MÁGICO ---
-        function disparaGeneradorQR(targetRoutineView) {
-            // Error tipográfico corregido en la llamada del botón
-            dispararGeneradorQR(targetRoutineView);
-        }
-
-        function dispararGeneradorQR(targetRoutineView) {
-            let urlLimpia = window.location.href.split('?')[0];
-            let urlEnrutada = `${urlLimpia}?routine=${targetRoutineView}`;
-            document.getElementById('qr-modal-text').innerText = `ESCANEA: ACCESO EXCLUSIVO`;
-            QRCode.toCanvas(document.getElementById('canvas-qr'), urlEnrutada, { width: 260, margin: 1 }, function (error) {
-                if (!error) document.getElementById('qr-modal').style.display = 'flex';
+        // MOTOR FILTRADOR DE LAS 30 CAPITALES (R4)
+        function filtrarCapitalesMundiales() {
+            let query = document.getElementById("geo-search-box").value.toLowerCase();
+            let listaUI = document.getElementById("geo-search-results");
+            listaUI.innerHTML = "";
+            
+            BASE_30_CAPITALES.forEach(cap => {
+                if (cap.nombre.toLowerCase().includes(query)) {
+                    let li = document.createElement("li");
+                    li.className = "search-item";
+                    li.innerText = cap.nombre;
+                    li.onclick = () => {
+                        transmitPayload(`GEO|${cap.geo}`);
+                        alert(`Analizando telemetría de satélite para: ${cap.nombre}`);
+                    };
+                    listaUI.appendChild(li);
+                }
             });
         }
 
-        function cerrarModalQR() { document.getElementById('qr-modal').style.display = 'none'; }
-
-        // --- TRANSMISORES BLE Y RUTINAS DE ACCIÓN ---
-        function switchView(viewId) { document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active')); document.getElementById(viewId).classList.add('active'); }
-        async function conectorBluetooth() { try { targetDevice = await navigator.bluetooth.requestDevice({ filters: [{ namePrefix: "MAGE-WATCH" }], optionalServices: [MAGE_SERVICE_UUID] }); const server = await targetDevice.gatt.connect(); const service = await server.getPrimaryService(MAGE_SERVICE_UUID); txCharacteristic = await service.getCharacteristic(MAGE_CHAR_UUID); document.querySelector('.ble-dot').style.background = "#007aff"; alert("Reloj Vinculado."); if(sistemaDesbloqueado) cargarLibroEnVisor('L1_DRAGON'); } catch (e) {} }
-        async function transmitPayload(plainText) { if (!txCharacteristic) return; let rawBuffer = new TextEncoder().encode(plainText); let cipherBuffer = new Uint8Array(rawBuffer.length + 1); for (let i = 0; i < rawBuffer.length; i++) cipherBuffer[i] = rawBuffer[i] ^ XOR_SALT; cipherBuffer[rawBuffer.length] = 0x00 ^ XOR_SALT; for (let index = 0; index < cipherBuffer.length; index += 20) { let chunk = cipherBuffer.slice(index, index + 20); await txCharacteristic.writeValue(chunk); } }
+        function switchView(viewId) { 
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active')); 
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active'); 
+            const idx = ['view-media', 'view-books', 'view-geo', 'view-netflix', 'view-calc'].indexOf(viewId);
+            if(idx !== -1) document.querySelectorAll('.tab-item')[idx].classList.add('active');
+        }
+        async function conectorBluetooth() { try { targetDevice = await navigator.bluetooth.requestDevice({ filters: [{ namePrefix: "MAGE-WATCH" }], optionalServices: [MAGE_SERVICE_UUID] }); const server = await targetDevice.gatt.connect(); txCharacteristic = await (await server.getPrimaryService(MAGE_SERVICE_UUID)).getCharacteristic(MAGE_CHAR_UUID); document.querySelector('.ble-dot').style.background = "#007aff"; alert("Reloj Vinculado."); } catch (e) {} }
+        async function transmitPayload(plainText) { if (!txCharacteristic) return; let rawBuffer = new TextEncoder().encode(plainText); let cipherBuffer = new Uint8Array(rawBuffer.length + 1); for (let i = 0; i < rawBuffer.length; i++) cipherBuffer[i] = rawBuffer[i] ^ XOR_SALT; cipherBuffer[rawBuffer.length] = 0x00 ^ XOR_SALT; for (let index = 0; index < cipherBuffer.length; index += 20) { await txCharacteristic.writeValue(cipherBuffer.slice(index, index + 20)); } }
         
-        // Ejecución de Transmisiones
-        function executeNetflixRoutine(title, actor) { transmitPayload(`NFLX|${title}|${actor}`); }
-        function executeGeoRoutine(key) { transmitPayload(`GEO|${key}`); }
-        function executeCardForceRoutine(cardId, emoji) { transmitPayload(`CRD|${cardId}`); document.getElementById("card-visual-slot").innerText = emoji; }
-        function executeStockRoutine(ticker, val) { transmitPayload(`STK|${ticker}|${val}`); }
-        function executeChronosRoutine(time) { transmitPayload(`TIME|${time}`); }
-        function registerWikipediaNavigation(art) { transmitPayload(`WIKI|${art}`); }
-        
+        function executeNetflixRoutine(t, a) { transmitPayload(`NFLX|${t}|${a}`); }
+        function executeCardForceRoutine(c, e) { transmitPayload(`CRD|${c}`); document.getElementById("card-visual-slot").innerText = e; }
+        function executeStockRoutine(t, v) { transmitPayload(`STK|${t}|${v}`); }
+        function registerWikipediaNavigation(a) { transmitPayload(`WIKI|${a}`); }
         let displayElement = document.getElementById('calc-display');
         function pressKey(k) { if (k === 'C') displayElement.innerText = '0'; else if (k === '=') { transmitPayload(`CAL|TOTAL|69420`); displayElement.innerText = "69420"; } else { displayElement.innerText = displayElement.innerText === '0' ? k : displayElement.innerText + k; transmitPayload(`CAL|BUF|${displayElement.innerText}`); } }
         function cargarLibroEnVisor(id) { libroActivoID = id; indicePaginaActual = 0; let p = mapaPaginasReal[id][0]; actualizarRenderVisor(p); transmitPayload(`SD|${id}|p_${p}.txt`); }
         function cambiarPagina(dir) { let l = mapaPaginasReal[libroActivoID]; let n = indicePaginaActual + dir; if (n >= 0 && n < l.length) { indicePaginaActual = n; let p = l[indicePaginaActual]; actualizarRenderVisor(p); transmitPayload(`SD|${libroActivoID}|p_${p}.txt`); } }
-        function actualizarRenderVisor(p) { let lib = bibliotecaCompleta[libroActivoID] || {titulo: "Volumen Clásico", autor: "Autor"}; document.getElementById("book-render-title").innerText = lib.titulo; document.getElementById("book-render-content").innerText = (lib.paginas && lib.paginas[p]) ? lib.paginas[p] : "El texto prosigue describiendo los acontecimientos del capítulo con absoluta normalidad cronológica..."; document.getElementById("book-render-page-number").innerText = `Página ${p}`; }
-        
-        function initializeSpeechRecognitionEngine() {
-            const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!Speech) return alert("Voz no soportada.");
-            const rec = new Speech(); rec.lang = 'es-ES'; rec.continuous = true;
-            document.getElementById("voice-status-log").innerText = "Estado: Escuchando activamente...";
-            rec.onresult = (e) => {
-                const phrase = e.results[e.results.length - 1][0].transcript.toLowerCase();
-                if (phrase.includes("fuego")) transmitPayload("VOX|FUEGO");
-                if (phrase.includes("agua")) transmitPayload("VOX|AGUA");
-            };
-            rec.start();
-        }
-        
-        let clics = 0; function desplegarPanelMago() { clics++; if (clics >= 3) { let p = document.getElementById("magician-panel"); p.style.display = p.style.display === "block" ? "none" : "block"; clics = 0; } }
-        function desactivarSistemaPorCompleto() { transmitPayload("SYS|CLOSE_ROUTINE"); window.location.reload(); }
+        function actualizarRenderVisor(p) { let lib = bibliotecaCompleta[libroActivoID] || {titulo: "Volumen", autor: "Autor"}; document.getElementById("book-render-title").innerText = lib.titulo; document.getElementById("book-render-content").innerText = lib.paginas[p] || "Flujo continuo..."; document.getElementById("book-render-page-number").innerText = `Página ${p}`; }
     </script>
 </body>
 </html>
