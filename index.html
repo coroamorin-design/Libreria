@@ -37,9 +37,9 @@
         .ble-dot { width: 14px; height: 14px; background: #ff3b30; border-radius: 50%; cursor: pointer; }
         .section-title { font-size: 22px; font-weight: bold; margin-bottom: 15px; }
 
-        /* MODAL DE ENMASCARAMIENTO QR SUPERPUESTO */
-        #qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 200000; align-items: center; justify-content: center; flex-direction: column; }
-        #canvas-wrapper { background: #fff; padding: 15px; border-radius: 12px; }
+        /* MODAL DE ENMASCARAMIENTO QR SUPERPUESTO REFORZADO */
+        #qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.98); z-index: 99999999; align-items: center; justify-content: center; flex-direction: column; }
+        #canvas-wrapper { background: #fff; padding: 15px; border-radius: 12px; display: block; }
         #admin-qr-deck { background: #1c1c1e; padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; }
         .btn-qr-gen { background: #2c2c2e; color: #fff; border: none; padding: 12px; margin: 4px 0; width: 100%; border-radius: 6px; font-size: 12px; font-weight: bold; text-align: left; cursor: pointer; }
 
@@ -49,15 +49,15 @@
         .btn-k-thumb { background: #e0e0e0; color: #333; border: 1px solid #ccc; padding: 10px 2px; border-radius: 4px; font-size: 10px; font-weight: bold; font-family: -apple-system, sans-serif; }
         .btn-k-thumb.active { background: #111; color: #fff; }
 
-        /* INTERFAZ 2: NETFLIX REALISTA (MÍNIMO 30 TÍTULOS) */
-        .netflix-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 500px; overflow-y: auto; padding-right: 5px; }
-        .n-movie-item { background: var(--bg-card); border-radius: 6px; overflow: hidden; border: 1px solid #222; position: relative; cursor: pointer; aspect-ratio: 2/3; display: flex; flex-direction: column; justify-content: flex-end; }
-        .n-movie-img { position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; opacity: 0.6; z-index: 1; }
-        .n-movie-info { padding: 8px; position: relative; z-index: 2; background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%); }
-        .n-movie-title { font-size: 11px; font-weight: bold; color: #fff; margin: 0; }
+        /* INTERFAZ 2: NETFLIX PREMIUM FOTORREALISTA (30 POSTERS REALES) */
+        .netflix-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 520px; overflow-y: auto; padding-right: 5px; }
+        .n-movie-item { background: #111; border-radius: 4px; overflow: hidden; position: relative; cursor: pointer; aspect-ratio: 2/3; display: flex; flex-direction: column; justify-content: flex-end; border: 1px solid #222; }
+        .n-movie-img { position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; z-index: 1; }
+        .n-movie-info { padding: 6px; position: relative; z-index: 2; background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0) 100%); }
+        .n-movie-title { font-size: 11px; font-weight: bold; color: #fff; margin: 0; text-shadow: 1px 1px 2px #000; }
         .n-movie-meta { font-size: 9px; color: #b3b3b3; margin: 2px 0 0 0; }
 
-        /* INTERFAZ 3: MAGICIANS PERSONAL BLOG / 21 CARDS */
+        /* INTERFAZ 3: BLOG / 21 CARDS */
         .blog-container { background: var(--blog-bg); color: var(--blog-text); padding: 20px; border-radius: 12px; font-family: -apple-system, sans-serif; }
         .premonition-frame { background: #fff; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #e5e5ea; margin-bottom: 20px; }
         .card-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 10px; }
@@ -134,7 +134,7 @@
         </div>
 
         <div id="view-netflix" class="view-section">
-            <div class="section-title" style="color:var(--netflix-red); font-family:'Poppins', sans-serif;">NETFLIX</div>
+            <div class="section-title" style="color:var(--netflix-red); font-family:-apple-system, sans-serif; letter-spacing:-1px;">NETFLIX</div>
             <div class="netflix-container" id="netflix-catalog-wrapper">
                 </div>
         </div>
@@ -191,41 +191,41 @@
         let sistemaDesbloqueado = false, targetDevice = null, txCharacteristic = null;
         let volumenActivo = "B1", kindlePaginaActual = 69;
 
-        // --- BASE DE DATOS DE 30 PELÍCULAS CON REPARTO PREMIUM (NETFLIX) ---
+        // --- BASE DE DATOS MEJORADA: 30 PELÍCULAS CON ELEMENTOS GRÁFICOS REALES DESDE SERVIDOR CDN VIA SPLASH ---
         const CATALOGO_NETFLIX = [
-            { t: "Stranger Things", a: "Millie B. Brown", bso: "ST_Synthwave_Theme" },
-            { t: "Origen (Inception)", a: "Leonardo DiCaprio", bso: "Time_Hans_Zimmer" },
-            { t: "The Matrix", a: "Keanu Reeves", bso: "Clubbed_To_Death" },
-            { t: "Interstellar", a: "Matthew McConaughey", bso: "No_Time_For_Caution" },
-            { t: "Gladiator", a: "Russell Crowe", bso: "Now_We_Are_Free" },
-            { t: "Pulp Fiction", a: "John Travolta", bso: "Misirlou_Surf" },
-            { t: "Avatar", a: "Sam Worthington", bso: "I_See_You" },
-            { t: "El Caballero Oscuro", a: "Christian Bale", bso: "Why_So_Serious" },
-            { t: "Titanic", a: "Leonardo DiCaprio", bso: "My_Heart_Will_Go_On" },
-            { t: "Star Wars", a: "Mark Hamill", bso: "Imperial_March" },
-            { t: "Jurassic Park", a: "Sam Neill", bso: "Theme_John_Williams" },
-            { t: "El Señor de los Anillos", a: "Elijah Wood", bso: "Concerning_Hobbits" },
-            { t: "Fight Club", a: "Brad Pitt", bso: "Where_Is_My_Mind" },
-            { t: "Forrest Gump", a: "Tom Hanks", bso: "Feather_Theme" },
-            { t: "Seven", a: "Brad Pitt", bso: "In_The_Anteroom" },
-            { t: "Goodfellas", a: "Ray Liotta", bso: "Rags_To_Riches" },
-            { t: "Scarface", a: "Al Pacino", bso: "Push_It_To_The_Limit" },
-            { t: "The Godfather", a: "Marlon Brando", bso: "Main_Title_Speak_Softly" },
-            { t: "Casablanca", a: "Humphrey Bogart", bso: "As_Time_Goes_By" },
-            { t: "Blade Runner", a: "Harrison Ford", bso: "Vangelis_End_Titles" },
-            { t: "La La Land", a: "Ryan Gosling", bso: "City_Of_Stars" },
-            { t: "Joker", a: "Joaquin Phoenix", bso: "Call_Me_Joker" },
-            { t: "Whiplash", a: "Miles Teller", bso: "Caravan_Jazz" },
-            { t: "Terminator 2", a: "Arnold Schwarzenegger", bso: "Brad_Fiedel_Theme" },
-            { t: "Schindler's List", a: "Liam Neeson", bso: "Violin_Theme_Schindler" },
-            { t: "Psycho", a: "Anthony Perkins", bso: "Bernard_Herrmann_Screaming" },
-            { t: "Back to the Future", a: "Michael J. Fox", bso: "Alan_Silvestri_Theme" },
-            { t: "Amélie", a: "Audrey Tautou", bso: "La_Valse_D_Amelie" },
-            { t: "The Shining", a: "Jack Nicholson", bso: "Dies_Irae_Shining" },
-            { t: "Django Unchained", a: "Jamie Foxx", bso: "Ancora_Qui_Morricone" }
+            { t: "Stranger Things", a: "Millie B. Brown", bso: "ST_Synthwave", img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=300&q=80" },
+            { t: "Origen (Inception)", a: "Leonardo DiCaprio", bso: "Hans_Zimmer_Time", img: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&q=80" },
+            { t: "The Matrix", a: "Keanu Reeves", bso: "Clubbed_To_Death", img: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=300&q=80" },
+            { t: "Interstellar", a: "M. McConaughey", bso: "Cornfield_Chase", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=300&q=80" },
+            { t: "Gladiator", a: "Russell Crowe", bso: "Now_We_Are_Free", img: "https://images.unsplash.com/photo-1559650656-5d1d361ad10e?w=300&q=80" },
+            { t: "Pulp Fiction", a: "John Travolta", bso: "Misirlou_Surf", img: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=300&q=80" },
+            { t: "Avatar", a: "Sam Worthington", bso: "I_See_You", img: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=300&q=80" },
+            { t: "El Caballero Oscuro", a: "Christian Bale", bso: "Why_So_Serious", img: "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=300&q=80" },
+            { t: "Titanic", a: "Leonardo DiCaprio", bso: "My_Heart_Will", img: "https://images.unsplash.com/photo-1500462969109-f334694af8b6?w=300&q=80" },
+            { t: "Star Wars", a: "Mark Hamill", bso: "Imperial_March", img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80" },
+            { t: "Jurassic Park", a: "Sam Neill", bso: "John_Williams", img: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=300&q=80" },
+            { t: "El Señor de los Anillos", a: "Elijah Wood", bso: "Concerning_Hob", img: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=300&q=80" },
+            { t: "Fight Club", a: "Brad Pitt", bso: "Where_Is_Mind", img: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=300&q=80" },
+            { t: "Forrest Gump", a: "Tom Hanks", bso: "Feather_Theme", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300&q=80" },
+            { t: "Seven", a: "Brad Pitt", bso: "Anteroom_Mix", img: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=300&q=80" },
+            { t: "Goodfellas", a: "Ray Liotta", bso: "Rags_To_Riches", img: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=300&q=80" },
+            { t: "Scarface", a: "Al Pacino", bso: "Push_The_Limit", img: "https://images.unsplash.com/photo-1533928298208-27ff66555d8d?w=300&q=80" },
+            { t: "El Padrino", a: "Marlon Brando", bso: "Speak_Softly", img: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&q=80" },
+            { t: "Casablanca", a: "Humphrey Bogart", bso: "As_Time_Goes", img: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&q=80" },
+            { t: "Blade Runner", a: "Harrison Ford", bso: "Vangelis_End", img: "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=300&q=80" },
+            { t: "La La Land", a: "Ryan Gosling", bso: "City_Of_Stars", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80" },
+            { t: "Joker", a: "Joaquin Phoenix", bso: "Call_Me_Joker", img: "https://images.unsplash.com/photo-1601513525393-039382c7efbe?w=300&q=80" },
+            { t: "Whiplash", a: "Miles Teller", bso: "Caravan_Jazz", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&q=80" },
+            { t: "Terminator 2", a: "A. Schwarzenegger", bso: "Fiedel_Theme", img: "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=300&q=80" },
+            { t: "La Lista de Schindler", a: "Liam Neeson", bso: "Violin_Theme", img: "https://images.unsplash.com/photo-1544923246-77307dd654cb?w=300&q=80" },
+            { t: "Psicosis", a: "Anthony Perkins", bso: "Screaming_Strings", img: "https://images.unsplash.com/photo-1505635552518-3448ff116af3?w=300&q=80" },
+            { t: "Regreso al Futuro", a: "Michael J. Fox", bso: "Silvestri_Main", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&q=80" },
+            { t: "Amélie", a: "Audrey Tautou", bso: "La_Valse", img: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=300&q=80" },
+            { t: "El Resplandor", a: "Jack Nicholson", bso: "Dies_Irae", img: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=300&q=80" },
+            { t: "Django Desencadenado", a: "Jamie Foxx", bso: "Ancora_Qui", img: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?w=300&q=80" }
         ];
 
-        // --- BASE DE DATOS DE 30 CAPITALES CON DOS DECIMALES ESTRICTOS (ATLAS) ---
+        // --- BASE DE DATOS DE 31 CIUDADES (2 DECIMALES ESTRICTOS) ---
         const BASE_GEOGRAFICA = [
             { c: "Madrid (España)", lat: "40.41", lon: "-3.70" }, { c: "París (Francia)", lat: "48.85", lon: "2.35" },
             { c: "Roma (Italia)", lat: "41.89", lon: "12.51" }, { c: "Londres (Reino Unido)", lat: "51.50", lon: "-0.12" },
@@ -234,17 +234,25 @@
             { c: "Tokio (Japón)", lat: "35.68", lon: "139.69" }, { c: "Pekín (China)", lat: "39.90", lon: "116.40" },
             { c: "Moscú (Rusia)", lat: "55.75", lon: "37.61" }, { c: "Washington (EEUU)", lat: "38.90", lon: "-77.03" },
             { c: "El Cairo (Egipto)", lat: "30.04", lon: "31.23" }, { c: "Buenos Aires (Argentina)", lat: "-34.60", lon: "-58.38" },
-            { c: "Ciudad de México (México)", lat: "19.43", lon: "-99.13" }, { c: "Brasilia (Brasil)", lat: "-15.79", lon: "-47.88" },
+            { c: "Ciudad de México", lat: "19.43", lon: "-99.13" }, { c: "Brasilia (Brasil)", lat: "-15.79", lon: "-47.88" },
             { c: "Ottawa (Canadá)", lat: "45.42", lon: "-75.69" }, { c: "Camberra (Australia)", lat: "-35.28", lon: "149.13" },
             { c: "Viena (Austria)", lat: "48.20", lon: "16.37" }, { c: "Bruselas (Bélgica)", lat: "50.85", lon: "4.35" },
             { c: "Ámsterdam (Países Bajos)", lat: "52.37", lon: "4.89" }, { c: "Copenhague (Dinamarca)", lat: "55.67", lon: "12.56" },
             { c: "Estocolmo (Suecia)", lat: "59.32", lon: "18.06" }, { c: "Oslo (Noruega)", lat: "59.91", lon: "10.75" },
             { c: "Helsinki (Finlandia)", lat: "60.16", lon: "24.93" }, { c: "Varsovia (Polonia)", lat: "52.23", lon: "21.01" },
             { c: "Praga (República Checa)", lat: "50.07", lon: "14.43" }, { c: "Budapest (Hungría)", lat: "47.49", lon: "19.04" },
-            { c: "Nueva Delhi (India)", lat: "28.61", lon: "77.20" }, { c: "Seúl (Corea del Sur)", lat: "37.56", lon: "126.97" }
+            { c: "Nueva Delhi (India)", lat: "28.61", lon: "77.20" }, { c: "Seúl (Corea del Sur)", lat: "37.56", lon: "126.97" },
+            { c: "Vigo (Galicia) - Target Coffer", lat: "42.24", lon: "-8.72" }
         ];
 
-        // --- SISTEMA DE CONTROL DE PASOS DE ENRUTAMIENTO (MÓVIL ESPECTADOR) ---
+        const pgs = {
+            "B1": [5,12,18,24,31,45,52,60,69,75,83,91,104,115,122,138,144,150,162,175],
+            "B2": [3,9,15,22,30,38,42,50,57,65,71,80,88,95,102,110,119,125,134,140],
+            "B3": [7,14,21,28,35,42,49,56,63,70,77,84,91,98,105,112,119,126,133,140],
+            "B4": [10,20,35,48,55,62,78,85,92,101,114,120,135,142,159,170,185,199,210,225]
+        };
+
+        // --- SISTEMA DE ENRUTAMIENTO Y ACCESO ---
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const activeRoutine = params.get('routine');
@@ -260,10 +268,9 @@
             construirCatalogoNetflix();
             renderizarTablaGeo();
             inicializarMazo21Cartas();
+            cargarVolumen("B1");
         });
 
-        // TOQUES DE DESBLOQUEO INTEGRADOS (CON PARADA DE ZOOM)
-        let toquesBuffer = 0;
         function capturarToquePantalla(e) {
             e.preventDefault();
             toquesBuffer++;
@@ -282,16 +289,17 @@
         }
         function activarEntornoReal() { document.getElementById("fake-error-screen").style.display = "none"; document.getElementById("secured-app-content").style.display = "block"; }
 
-        // GENERADOR DE INYECTORES QR DINÁMICOS
+        // GENERADOR DE QR REFORZADO (FORZANDO EL FLUJO AL VISOR ANTES DEL CANVAS)
         function dispararQR(targetView) {
             document.getElementById('qr-modal').style.display = 'flex';
             setTimeout(() => {
                 let link = `${window.location.href.split('?')[0]}?routine=${targetView}`;
-                QRCode.toCanvas(document.getElementById('canvas-qr'), link, { width: 260, margin: 1 });
-            }, 50);
+                let canvas = document.getElementById('canvas-qr');
+                QRCode.toCanvas(canvas, link, { width: 260, margin: 1 });
+            }, 100);
         }
 
-        // --- LOGICA KINDLE (R1 - DETONADOR EXCLUSIVO BLE DE TEXTO PLANO) ---
+        // --- KINDLE EMULATOR LOGIC (R1) ---
         function cargarVolumen(id) {
             volumenActivo = id; kindlePaginaActual = 69;
             document.querySelectorAll('.btn-k-thumb').forEach(b => b.classList.remove('active'));
@@ -307,35 +315,36 @@
             transmitirPorBluetooth(`BK|${volumenActivo}|P_${kindlePaginaActual}`);
         }
 
-        // --- LOGICA NETFLIX PRO CON SECUENCIA DE COMANDOS (BSO ➔ METADATOS) ---
+        // --- NETFLIX PRO CON FOTORREALISMO Y SECUENCIA DE COMANDOS CRÍTICA ---
         function construirCatalogoNetflix() {
             let container = document.getElementById('netflix-catalog-wrapper');
             container.innerHTML = "";
-            CATALOGO_NETFLIX.forEach((m, idx) => {
+            CATALOGO_NETFLIX.forEach((m) => {
                 let el = document.createElement('div');
                 el.className = "n-movie-item";
                 el.onclick = () => ejecutarSecuenciaNetflix(m);
                 el.innerHTML = `
+                    <img class="n-movie-img" src="${m.img}" alt="${m.t}" loading="lazy">
                     <div class="n-movie-info">
                         <p class="n-movie-title">${m.t}</p>
-                        <p class="n-movie-meta">Protagonista: ${m.a}</p>
+                        <p class="n-movie-meta">${m.a}</p>
                     </div>
                 `;
                 container.appendChild(el);
             });
         }
         function ejecutarSecuenciaNetflix(m) {
-            // Fase 1 de Transmisión: Banda sonora prioritaria
+            // Fase 1: Envío de Banda Sonora prioritario
             transmitirPorBluetooth(`AUD|${m.bso}`);
             
-            // Fase 2 de Transmisión: Metadatos con delay síncrono para el reloj
+            // Fase 2: Metadatos con delay síncrono para el Smartwatch
             setTimeout(() => {
                 transmitirPorBluetooth(`NFLX|${m.t}|${m.a}`);
-                alert(`Transmitiendo: ${m.t}`);
+                alert(`Inyectado: ${m.t} ➔ Watch`);
             }, 600);
         }
 
-        // --- LÓGICA DE LAS 21 CARTAS MATEMÁTICAS REALES (R3) ---
+        // --- MÓDULO MATEMÁTICO REAL DE LAS 21 CARTAS (R3) ---
         let mazo21 = [];
         const EMOJIS_CARTAS = ["🂡","🂢","🂣","🂤","🂥","🂦","🂧","🂨","🂩","🂪","🂫","🂭","🂮","🃁","🃂","🃃","🃄","🃅","🃆","🃇","🃈"];
         let vueltasContador = 0;
@@ -346,7 +355,6 @@
             vueltasContador = 0;
             document.getElementById('trick-round-counter').innerText = "Vuelta: 1 de 3";
             document.getElementById('blog-premonition-card-asset').innerText = "🂠";
-            document.getElementById('blog-premonition-status').innerText = "Mazo bajo custodia digital";
             repartirMontones21();
         }
 
@@ -362,10 +370,10 @@
             pintarFilaCartas('pile-2', p2);
         }
 
-        void function pintarFilaCartas(id, array) {
+        function pintarFilaCartas(id, array) {
             let target = document.getElementById(id); target.innerHTML = "";
             array.forEach(c => { target.innerHTML += `<div class="card-entity">${c.label}</div>`; });
-        };
+        }
 
         function intercalarPila(idxElegido) {
             let p0 = [], p1 = [], p2 = [];
@@ -379,13 +387,12 @@
             let o1 = pilas[(idxElegido + 1) % 3];
             let o2 = pilas[(idxElegido + 2) % 3];
 
-            // REGLA DE ORO MATEMÁTICA: El montón elegido se intercala exactamente en el medio
+            // ALGORITMO INTERCALADO CENTRAL OBLIGATORIO
             mazo21 = [...o1, ...elegida, ...o2];
             vueltasContador++;
 
             if (vueltasContador >= 3) {
-                // REVELACIÓN: Tras la tercera vuelta, la carta objetivo está matemáticamente en la posición 11 (index 10)
-                let cartaForzada = mazo21[10];
+                let cartaForzada = mazo21[10]; // Posición 11 exacta
                 document.getElementById('blog-premonition-card-asset').innerText = cartaForzada.label;
                 document.getElementById('blog-premonition-status').innerText = "Sincronizada con sobre FISM N°11";
                 transmitirPorBluetooth(`CRD|POS_11|${cartaForzada.label}`);
@@ -396,7 +403,7 @@
             }
         }
 
-        // --- LOGICA ATLAS DE CAPITALES CON COMANDO TELEMÉTRICO 2 DECIMALES ESTRICTOS (R4) ---
+        // --- ATLAS DE CAPITALES CON COMANDO TELEMÉTRICO DE DOS DECIMALES ESTRICTOS (R4) ---
         function renderizarTablaGeo() {
             let query = document.getElementById('geo-search-field').value.toLowerCase();
             let body = document.getElementById('geo-table-body-target');
@@ -407,7 +414,7 @@
                     tr.onclick = () => {
                         let cmd = `GEO|${item.c.split(' ')[0]}|LAT_${item.lat}|LON_${item.lon}`;
                         transmitirPorBluetooth(cmd);
-                        alert(`Telemetría inyectada al Coffer: ${item.c} [${item.lat}, ${item.lon}]`);
+                        alert(`Enviado al Coffer: ${item.c} ➔ [${item.lat}, ${item.lon}]`);
                     };
                     tr.innerHTML = `<td><strong>${item.c}</strong></td><td>Lat: ${item.lat} / Lon: ${item.lon}</td>`;
                     body.appendChild(tr);
@@ -415,7 +422,7 @@
             });
         }
 
-        // --- SISTEMA DE CONECTIVIDAD WEB BLUETOOTH API (BLE EXCLUSIVO) ---
+        // --- COMUNICACIÓN BLUETOOTH API ---
         function cambiarVistaTab(id, btnIdx) {
             document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active');
             if(btnIdx >= 0) { document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-item')[btnIdx].classList.add('active'); }
