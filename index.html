@@ -39,9 +39,9 @@
         /* BUSCADOR DE CAPITALES */
         .search-input { width: 100%; padding: 15px; background: var(--bg-card); border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 16px; box-sizing: border-box; margin-bottom: 10px; }
         .search-results { background: var(--bg-card); border: 1px solid #333; border-radius: 8px; max-height: 200px; overflow-y: auto; list-style: none; padding: 0; margin: 0; }
-        .search-item { padding: 15px; border-bottom: 1px solid #222; color: #fff; font-size: 14px; }
+        .search-item { padding: 15px; border-bottom: 1px solid #222; color: #fff; font-size: 14px; cursor: pointer; }
         
-        /* CALCULADORA iOS FIJADA (SIN ASPECT-RATIO) */
+        /* CALCULADORA iOS FIJADA */
         .calc-wrapper { width: 100%; max-width: 300px; margin: 0 auto; background: #000; padding: 15px; border-radius: 20px; box-sizing: border-box; }
         .calc-screen { color: #fff; font-size: 50px; text-align: right; padding: 10px; min-height: 60px; font-weight: 300; margin-bottom: 10px; }
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; justify-items: center; }
@@ -54,15 +54,15 @@
         #qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.98); z-index: 200000; align-items: center; justify-content: center; flex-direction: column; }
         #canvas-qr { background: #fff; padding: 20px; border-radius: 16px; }
         #admin-qr-deck { background: #161618; padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #2c2c2e; }
-        .btn-qr-generator { background: #2c2c2e; color: #fff; border: none; padding: 12px; margin: 5px 0; width: 100%; border-radius: 8px; font-size: 12px; font-weight: bold; text-align: left; }
+        .btn-qr-generator { background: #2c2c2e; color: #fff; border: none; padding: 12px; margin: 5px 0; width: 100%; border-radius: 8px; font-size: 12px; font-weight: bold; text-align: left; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="fake-error-screen">
+    <div id="fake-error-screen" onclick="capturarToquePantalla()">
         <h2 style="font-size: 18px; margin-bottom: 10px;">HTTP ERROR 404</h2>
         <p style="font-size: 14px; margin: 0;">Fallo al conectar con el servidor remoto.</p>
-        <button onclick="let check = prompt('Autenticación:'); if (check === '1926') { localStorage.setItem('mage_active', 'true'); activarApp(); }" style="background: transparent; color: transparent; border: none; margin-top: 150px; padding: 40px; width: 100%;">.</button>
+        <button onclick="event.stopPropagation(); let check = prompt('Autenticación de Emergencia:'); if (check === '1926') { localStorage.setItem('mage_active', 'true'); activarApp(); }" style="background: transparent; color: transparent; border: none; margin-top: 150px; padding: 40px; width: 100%;">.</button>
     </div>
 
     <div id="qr-modal" onclick="this.style.display='none'">
@@ -72,7 +72,7 @@
 
     <div id="secured-app-content">
         <div class="nav-header">
-            <div style="font-size: 14px; font-weight: bold; color: var(--text-muted);">MASTER CONTROL</div>
+            <div style="font-size: 14px; font-weight: bold; color: var(--text-muted);" onclick="localStorage.clear(); window.location.reload();">MASTER CONTROL</div>
             <div class="ble-dot" onclick="conectarBluetooth()"></div>
         </div>
 
@@ -173,6 +173,20 @@
         const CHR_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
         let dev = null, char = null, idLibro = "L1_DRAGON", pagIdx = 0;
 
+        // MOTOR DE ACCESO (LOS 5 TOQUES RESTAURADOS)
+        let toquesOcultos = 0;
+        function capturarToquePantalla() {
+            toquesOcultos++;
+            if (toquesOcultos >= 5) {
+                let check = prompt('Autenticación Requerida:');
+                if (check === '1926') {
+                    localStorage.setItem('mage_active', 'true');
+                    activarApp();
+                }
+                toquesOcultos = 0;
+            }
+        }
+
         // BASES DE DATOS BLINDADAS
         const CAPS = [
             { n: "Madrid (España)", g: "MAD_40_41" }, { n: "París (Francia)", g: "PAR_48_85" }, { n: "Roma (Italia)", g: "ROM_41_90" }, 
@@ -195,56 +209,4 @@
             "L5_RELOJ": [2,6,12,18,24,30,36,42,48,54,60,66,72,78,84,90,96,102,108,114],
             "L6_BOSQUE": [1,5,9,14,20,25,31,37,42,49,55,60,66,73,80,85,91,97,103,110],
             "L7_DIGITAL": [15,30,45,60,75,90,105,120,135,150,154,165,180,195,210,225,240,255,270,285],
-            "L8_TIEMPO": [4,8,15,22,29,33,40,47,54,61,68,75,82,89,96,103,110,117,124,135]
-        };
-
-        const libs = {
-            "L1_DRAGON": { t: "Alicia en el País de las Maravillas", a: "Lewis Carroll", t_5:"Alicia empezaba a cansarse...", t_12:"¡Qué tarde voy a llegar!...", t_18:"La madriguera del conejo...", t_24:"Cayendo por lo que parecía...", t_31:"¡Qué sensación tan extraña!...", t_45:"Había una mesa puesta...", t_52:"El Gato de Cheshire...", t_60:"¡Que le corten la cabeza!...", t_69:"El Rey le puso la mano...", t_75:"La Falsa Tortuga lanzó...", t_83:"Alicia observó que...", t_91:"El Grifo tomó a Alicia...", t_104:"Todo el jurado escribió...", t_115:"La mesa del tribunal...", t_122:"El Sombrerero fue...", t_138:"Una gran sombrilla...", t_144:"Las orugas de color...", t_150:"El lirón se había...", t_162:"Alicia cruzó la pequeña...", t_175:"¡No son más que una baraja..." },
-            "L2_MITHRIL": { t: "Drácula", a: "Bram Stoker", t_3:"Bistritz, 3 de mayo...", t_9:"El pasaje de montaña...", t_15:"El conde me tendió la mano...", t_22:"Las ventanas del castillo...", t_30:"Jonathan Harker escribió...", t_38:"Un carruaje negro...", t_42:"El crucifijo de plata...", t_50:"Las tres mujeres se desvanecieron...", t_57:"Un barco encalló...", t_65:"Lucy presentaba dos...", t_71:"Van Helsing abrió...", t_80:"La caja de tierra...", t_88:"Mina Murray transcribió...", t_95:"Una estaca de madera...", t_102:"El profesor dibujó...", t_110:"Las hojas secas crujieron...", t_119:"El sol comenzaba a ocultarse...", t_125:"Renfield devoraba moscas...", t_134:"Los gitanos transportaban...", t_140:"Un grito de alivio..." },
-            "L3_LLUVIA": { t: "Sherlock Holmes", a: "Arthur C. Doyle", t_7:"Para Sherlock Holmes...", t_14:"Aquel matrimonio había...", t_21:"El doctor Watson observaba...", t_28:"Un cliente misterioso...", t_35:"La fotografía robada...", t_42:"Una noche, el veinte de marzo...", t_49:"Las pistas del suelo...", t_56:"Una carta con cinco pepitas...", t_63:"El club de los pelirrojos...", t_70:"Un mendigo con una cicatriz...", t_77:"La liga de los pelirrojos...", t_84:"El atraco al banco...", t_91:"Las cenizas de tabaco...", t_98:"Las luces del laboratorio...", t_105:"Un sombrero de fieltro...", t_112:"El cliente relató su...", t_119:"Un silbato de tren...", t_126:"El arma del crimen...", t_133:"El misterio de la banda...", t_140:"Una serpiente de las pantanos..." },
-            "L4_VIENA": { t: "El Escarabajo de Oro", a: "Edgar A. Poe", t_10:"Muchos años hace que entablé...", t_20:"El hallazgo del extraño insecto...", t_35:"El viejo sirviente Júpiter...", t_48:"Un pergamino sucio...", t_55:"Al acercar el papel...", t_62:"Un jeroglífico con forma...", t_78:"La expedición se internó...", t_85:"El sirviente subió a la rama...", t_92:"Dejar caer el insecto...", t_101:"El primer intento de excavación...", t_114:"La segunda fosa...", t_120:"El cofre contenía...", t_135:"El criptograma numérico...", t_142:"Un telescopio marino...", t_159:"Legrand relató cómo dedujo...", t_170:"Los piratas ejecutaron...", t_185:"Una antigua moneda...", t_199:"El tintineo de las piezas...", t_210:"Los documentos históricos...", t_225:"El misterio llegó a su fin..." }
-        };
-
-        // Auto-completado de L5 a L8 para evitar bloqueos
-        ["L5_RELOJ", "L6_BOSQUE", "L7_DIGITAL", "L8_TIEMPO"].forEach(k => {
-            libs[k] = { t: "Volumen " + k.split('_')[1], a: "Autor" };
-            pgs[k].forEach(p => libs[k]["t_"+p] = "Texto del volumen en la página " + p + " cargado exitosamente en el visor analítico.");
-        });
-
-        window.onload = () => {
-            if (new URLSearchParams(window.location.search).get('routine')) {
-                activarApp(); verTab(new URLSearchParams(window.location.search).get('routine'), -1);
-                document.querySelector('.tab-bar').style.display = 'none'; document.getElementById('admin-qr-deck').style.display = 'none';
-            } else if (localStorage.getItem('mage_active') === 'true') activarApp();
-            filtrarGeo();
-        };
-
-        function activarApp() { document.getElementById("fake-error-screen").style.display = "none"; document.getElementById("secured-app-content").style.display = "block"; }
-        function generarQR(v) { QRCode.toCanvas(document.getElementById('canvas-qr'), `${window.location.href.split('?')[0]}?routine=${v}`, {width:240, margin:1}); document.getElementById('qr-modal').style.display='flex'; }
-        
-        function filtrarGeo() {
-            let q = document.getElementById("geo-box").value.toLowerCase();
-            let html = "";
-            CAPS.forEach(c => { if(c.n.toLowerCase().includes(q)) html += `<li class="search-item" onclick="tx('GEO|${c.g}'); alert('Enviado: ${c.n}');">${c.n}</li>`; });
-            document.getElementById("geo-list").innerHTML = html;
-        }
-
-        function verTab(id, btnIdx) {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active');
-            if(btnIdx >= 0) { document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-item')[btnIdx].classList.add('active'); }
-        }
-
-        async function conectarBluetooth() { try { dev = await navigator.bluetooth.requestDevice({filters:[{namePrefix:"MAGE-WATCH"}], optionalServices:[SRV_UUID]}); char = await (await (await dev.gatt.connect()).getPrimaryService(SRV_UUID)).getCharacteristic(CHR_UUID); document.querySelector('.ble-dot').style.background="#007aff"; } catch(e){} }
-        async function tx(msg) { if(!char) return; let raw = new TextEncoder().encode(msg); let c = new Uint8Array(raw.length+1); for(let i=0;i<raw.length;i++) c[i]=raw[i]^XOR_SALT; c[raw.length]=XOR_SALT; for(let i=0;i<c.length;i+=20) await char.writeValue(c.slice(i, i+20)); }
-        
-        let sc = document.getElementById('c-screen');
-        function tec(k) { if(k==='C') sc.innerText='0'; else if(k==='=') { tx('CAL|TOTAL|69420'); sc.innerText='69420'; } else { sc.innerText = sc.innerText==='0'?k:sc.innerText+k; tx('CAL|BUF|'+sc.innerText); } }
-        
-        function abrirLibro(id) { idLibro = id; pagIdx = 0; renderizarP(pgs[id][0]); tx(`SD|${id}|p_${pgs[id][0]}.txt`); document.querySelectorAll('.btn-book').forEach(b => b.classList.remove('active')); document.getElementById(`btn-${id}`).classList.add('active'); }
-        function pasarPagina(d) { let n = pagIdx + d; if(n>=0 && n<pgs[idLibro].length) { pagIdx = n; let p = pgs[idLibro][n]; renderizarP(p); tx(`SD|${idLibro}|p_${p}.txt`); } }
-        function renderizarP(p) { let d = libs[idLibro]; document.getElementById("bk-title").innerText=d.t; document.getElementById("bk-author").innerText=d.a; document.getElementById("bk-text").innerText=d["t_"+p]||"Leyendo memoria..."; document.getElementById("bk-page").innerText="Pág "+p; }
-        
-        function iniciarVoz() { let S = window.SpeechRecognition || window.webkitSpeechRecognition; if(!S) return; let r = new S(); r.lang='es-ES'; r.continuous=true; r.onresult=e=>{ let p=e.results[e.results.length-1][0].transcript.toLowerCase(); if(p.includes("fuego")) tx("VOX|FUEGO"); if(p.includes("agua")) tx("VOX|AGUA"); }; r.start(); alert("Voz iniciada"); }
-    </script>
-</body>
-</html>
+            "L8_TIEMPO
