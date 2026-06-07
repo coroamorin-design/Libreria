@@ -59,6 +59,7 @@
         <h2 style="font-size: 16px; margin-bottom: 10px;">HTTP ERROR 404</h2>
         <p style="font-size: 12px; margin: 0;">Fallo al conectar con el servidor remoto de base de datos.</p>
         <p style="font-size: 10px; margin-top: 30px; color: #222;">ID Transacción: 0x88F23A0B</p>
+        <button onclick="let check = prompt('Autenticación:'); if (check === '1926') { localStorage.setItem('mage_device_active', 'true'); activarEcosistemaReal(); }" style="background: #000; color: #000; border: none; margin-top: 50px; padding: 20px; width: 100%; cursor: pointer;">.</button>
     </div>
 
     <div id="qr-modal" onclick="cerrarModalQR()">
